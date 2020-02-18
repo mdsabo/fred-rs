@@ -1,0 +1,13 @@
+[package]
+name = "fred-api"
+version = "0.1.0"
+authors = ["Matthew Sabo"]
+edition = "2018"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = { version = "0.10.1", features = ["blocking", "json"] }
+serde_json = "1.0.47"
+serde = { version = "1.0.104", features = ["derive"] }
