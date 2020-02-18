@@ -1,6 +1,6 @@
 #![crate_name = "fred_rs"]
 
-/// Contains functions and definitons related to the persistent client
+/// Functions and definitons related to the persistent client
 /// 
 /// ```
 /// use fred_rs::client::FredClient;

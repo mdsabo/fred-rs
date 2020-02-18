@@ -50,9 +50,9 @@ pub struct Builder {
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
-    ASC,    
+    Ascending,    
     /// Dates returned in descending order
-    DESC,   
+    Descending,   
 }
 
 /// Data transformation options for the fred/series/observation endpoint
@@ -161,7 +161,7 @@ impl Builder {
     /// builder
     ///     .limit(100)
     ///     .units(Units::LOG)
-    ///     .sort_order(SortOrder::DESC);
+    ///     .sort_order(SortOrder::Descending);
     /// ```
     pub fn new() -> Builder {
         Builder {
@@ -204,6 +204,11 @@ impl Builder {
     /// # Arguments
     /// * `num_points` - Maximum number of data points to return
     pub fn limit(&mut self, num_points: usize) -> &mut Builder {
+        let num_points = if num_points > 1000000 { // max value is 1000
+            1000000
+        } else {
+            num_points
+        };
         self.option_string += format!("&limit={}", num_points).as_str();
         self
     }
@@ -212,7 +217,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// Docs: https://research.stlouisfed.org/docs/api/fred/series_observations.html#offset
+    /// https://research.stlouisfed.org/docs/api/fred/series_observations.html#offset
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -224,13 +229,13 @@ impl Builder {
     /// Change the sort order of the data
     /// 
     /// # Arguments
-    /// * `order` - Data sort order enum (see ObservationSortOrder)
+    /// * `order` - Data sort order enum
     pub fn sort_order(&mut self, order: SortOrder) -> &mut Builder {
         match order {
-            SortOrder::DESC => {
+            SortOrder::Descending => {
                 self.option_string += format!("&sort_order=desc").as_str()
             },
-            _ => () // ASC is the default so do nothing
+            _ => () // Ascending is the default so do nothing
         }
         self
     }
@@ -400,7 +405,6 @@ impl Builder {
             self.vintage_dates.push(',');
         } 
         self.vintage_dates += date;
-
         self
     }
 }

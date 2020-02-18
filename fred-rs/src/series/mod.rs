@@ -1,4 +1,40 @@
 
+/// Get the categories for an economic data series.
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/series_categories.html](https://research.stlouisfed.org/docs/api/fred/series_categories.html)
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::categories::{Builder, Response};
+/// 
+/// // Create the client object
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         return
+///     },
+/// };
+/// 
+/// // Create the argument builder
+/// let mut builder = Builder::new();
+/// 
+/// // Set the arguments for the builder
+/// builder
+///     .realtime_start("2000-01-01")
+///     .realtime_end("2020-01-01");
+/// 
+/// // Make the request and pass in the builder to apply the arguments
+/// let resp: Response = match c.series_categories("EXJPUS", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         return
+///     },
+/// };
+/// ```
+pub mod categories;
+
 /// Get the observations (data points) for an economic data series.
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
@@ -35,6 +71,85 @@
 /// };
 /// ```
 pub mod observation;
+
+/// Get the release for an economic data series.
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/series_release.html](https://research.stlouisfed.org/docs/api/fred/series_release.html)
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::categories::{Builder, Response};
+/// 
+/// // Create the client object
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         return
+///     },
+/// };
+/// 
+/// // Create the argument builder
+/// let mut builder = Builder::new();
+/// 
+/// // Set the arguments for the builder
+/// builder
+///     .realtime_start("2000-01-01")
+///     .realtime_end("2020-01-01");
+/// 
+/// // Make the request and pass in the builder to apply the arguments
+/// let resp: Response = match c.series_categories("EXJPUS", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         return
+///     },
+/// };
+/// ```
+pub mod release;
+
+// ----------------------------------------------------------------------------
+
+/// Get economic data series that match keywords.
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::search::{Builder, Response, OrderBy, SortOrder};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .limit(5)
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Frequency);
+/// 
+/// let resp: Response = match c.series_search("monetary index", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.seriess {
+///     println!(
+///         "{}: {} {}",
+///         item.id,
+///         item.title,
+///         item.frequency,
+///     );
+/// }
+/// ```
+pub mod search;
 
 // ----------------------------------------------------------------------------
 use serde::Deserialize;

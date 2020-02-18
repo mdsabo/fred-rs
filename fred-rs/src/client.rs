@@ -101,6 +101,34 @@ impl FredClient {
         }
     }
 
+    pub fn series_categories(
+        &mut self,
+        series_id: &str,
+        builder: Option<series::categories::Builder>
+    ) -> Result<series::categories::Response, String> {
+        let mut url: String = format!(
+            "{}series/categories?series_id={}&api_key={}&file_type=json",
+            self.url_base,
+            series_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     pub fn series_observation(
         &mut self,
         series_id: &str,
@@ -110,6 +138,64 @@ impl FredClient {
             "{}series/observations?series_id={}&api_key={}&file_type=json",
             self.url_base,
             series_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn series_release(
+        &mut self,
+        series_id: &str,
+        builder: Option<series::release::Builder>
+    ) -> Result<series::release::Response, String> {
+        let mut url: String = format!(
+            "{}series/release?series_id={}&api_key={}&file_type=json",
+            self.url_base,
+            series_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn series_search(
+        &mut self,
+        search_text: &str,
+        builder: Option<series::search::Builder>
+    ) -> Result<series::search::Response, String> {
+        let search_text = search_text.replace(" ", "%20"); // encode strings in url
+
+        let mut url: String = format!(
+            "{}series/search?search_text={}&api_key={}&file_type=json",
+            self.url_base,
+            search_text,
             self.api_key
         );
 
