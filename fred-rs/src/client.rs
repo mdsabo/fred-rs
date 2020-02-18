@@ -9,6 +9,9 @@ use crate::*;
 const FRED_BASE_URL: &str = "https://api.stlouisfed.org/fred/";
 const FRED_API_KEY: &str = "FRED_API_KEY";
 
+/// Persistent client object used to access the FRED API
+/// 
+/// Each method for the client represents a data endpoint provided by the API and will return a data object representing the response contents.
 pub struct FredClient {
     client: Client,
     url_base: &'static str,
@@ -17,6 +20,21 @@ pub struct FredClient {
 
 impl FredClient {
 
+    /// Creates and initializes a new client object
+    /// 
+    /// If a connection cannot be made to the FRED API, it returns Err containing an error message.
+    /// 
+    /// ```
+    /// use fred_rs::client::FredClient;
+    /// 
+    /// let mut c = match FredClient::new() {
+    ///     Ok(c) => c,
+    ///     Err(msg) => {
+    ///         println!("{}", msg);
+    ///         return
+    ///     },
+    /// };
+    /// ```
     pub fn new() -> Result<FredClient, String> {
 
         let client = match Client::builder().timeout(Duration::from_secs(10)).build() {
@@ -55,11 +73,39 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Series
 
+    pub fn series(
+        &mut self,
+        series_id: &str,
+        builder: Option<series::Builder>
+    ) -> Result<series::Response, String> {
+        let mut url: String = format!(
+            "{}series?series_id={}&api_key={}&file_type=json",
+            self.url_base,
+            series_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     pub fn series_observation(
         &mut self,
         series_id: &str,
-        opt_builder: Option<series::ObservationBuilder>
-    ) -> Result<series::ObservationResponse, String> {
+        builder: Option<series::observation::Builder>
+    ) -> Result<series::observation::Response, String> {
         let mut url: String = format!(
             "{}series/observations?series_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -67,8 +113,8 @@ impl FredClient {
             self.api_key
         );
 
-        match opt_builder {
-            Some(builder) => url.push_str(builder.options().as_str()),
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
             None => (),
         }
 
@@ -110,7 +156,7 @@ mod tests {
             },
         };
 
-        let resp: series::ObservationResponse = match c.series_observation("GNPCA", None) {
+        let resp: series::observation::Response = match c.series_observation("GNPCA", None) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -136,13 +182,13 @@ mod tests {
             },
         };
 
-        let mut opt_builder = series::ObservationBuilder::new();
+        let mut opt_builder = series::observation::Builder::new();
         opt_builder
             .observation_start("2000-01-01")
-            .units(series::ObservationUnits::PCH)
-            .frequency(series::ObservationFrequency::M);
+            .units(series::observation::Units::PCH)
+            .frequency(series::observation::Frequency::M);
 
-        let resp: series::ObservationResponse = match c.series_observation("UNRATE", Some(opt_builder)) {
+        let resp: series::observation::Response = match c.series_observation("UNRATE", Some(opt_builder)) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
