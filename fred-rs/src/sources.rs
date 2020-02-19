@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 /// Response data structure for the fred/sources endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/aources.html] (https://research.stlouisfed.org/docs/api/fred/sources.html)
+/// [https://research.stlouisfed.org/docs/api/fred/sources.html] (https://research.stlouisfed.org/docs/api/fred/sources.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -26,7 +26,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/sources.html](https://research.stlouisfed.org/docs/api/fred/sources.html)
 pub struct Source {
     /// The source ID
     pub id: usize,

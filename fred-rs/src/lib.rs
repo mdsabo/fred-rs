@@ -190,20 +190,42 @@ pub mod related_tags;
 /// 
 /// for item in resp.sources {
 ///     match item.link {
-///         Some(l) => {
-///             println!(
-///                 "{}: {}",
-///                 item.name,
-///                 l,
-///             );
-///         },
-///         None => {
-///             println!(
-///                 "{}: null",
-///                 item.name,
-///             );
-///         }
+///         Some(l) => println!("{}: {}", item.name, l),
+///         None => println!("{}: null", item.name),
 ///     }
 /// }
 /// ```
 pub mod sources;
+
+/// fred/source endpoint
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::source::Response;
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let resp: Response = match c.source(1, None) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.sources {
+///     match item.link {
+///         Some(l) => println!("{}: {}", item.name, l),
+///         None => println!("{}: null", item.name),
+///     }
+/// }
+/// ```
+pub mod source;
