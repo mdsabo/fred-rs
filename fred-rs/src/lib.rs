@@ -66,6 +66,39 @@ pub mod client;
 pub mod category;
 
 /// fred/releases endpoints
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::releases::{Builder, Response, SortOrder, OrderBy};
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .limit(5)
+///     .sort_order(SortOrder::Ascending)
+///     .order_by(OrderBy::ReleaseId);
+/// 
+/// let resp: Response = match c.releases(Some(builder)) {
+/// Ok(resp) => resp,
+/// Err(msg) => {
+///     println!("{}", msg);
+///     assert_eq!(2, 1);
+///     return
+///     },
+/// };
+/// 
+/// for item in resp.releases {
+///     println!("{}: {}", item.id, item.name);
+/// }
+/// ```
 pub mod releases;
 
 /// fred/series endpoints

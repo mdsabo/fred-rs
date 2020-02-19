@@ -691,6 +691,61 @@ impl FredClient {
             Err(e) => return Err(e.to_string()),
         }
     }
+
+    // ----------------------------------------------------------------------
+    // Releases
+
+    pub fn releases(
+        &mut self,
+        builder: Option<releases::Builder>
+    ) -> Result<releases::Response, String> {
+        let mut url: String = format!(
+            "{}releases?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn releases_dates(
+        &mut self,
+        builder: Option<releases::dates::Builder>
+    ) -> Result<releases::dates::Response, String> {
+        let mut url: String = format!(
+            "{}releases/dates?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
 }
 
 #[cfg(test)]

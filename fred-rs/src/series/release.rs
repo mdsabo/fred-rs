@@ -29,7 +29,7 @@ pub struct Release {
     /// Indicates if there was a press release
     pub press_release: bool,
     /// A link to the press release if there was one
-    pub link: String,
+    pub link: Option<String>,
 }
 
 pub struct Builder {
@@ -110,7 +110,7 @@ mod tests {
         };
 
         for item in resp.releases {
-            println!("{}: {} | {}", item.name, item.press_release, item.link);
+            println!("{}: {}", item.name, item.press_release);
         }
     } 
 }
