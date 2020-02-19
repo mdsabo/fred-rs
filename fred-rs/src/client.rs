@@ -214,6 +214,33 @@ impl FredClient {
         }
     }
 
+    pub fn series_updates(
+        &mut self,
+        builder: Option<series::updates::Builder>
+    ) -> Result<series::updates::Response, String> {
+
+        let mut url: String = format!(
+            "{}series/updates?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+        
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Series/Search
     pub fn series_search(

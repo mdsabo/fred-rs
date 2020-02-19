@@ -191,6 +191,8 @@ pub mod tags;
 /// ```
 pub mod search;
 
+pub mod updates;
+
 // ----------------------------------------------------------------------------
 use serde::Deserialize;
 
