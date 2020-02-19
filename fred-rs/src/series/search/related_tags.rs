@@ -1,9 +1,11 @@
 use serde::Deserialize;
 
+const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
+
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/tags endpoint
+/// Response data structure for the fred/series/search/related_tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -26,7 +28,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
 pub struct Tag {
     /// The tag name
     pub name: String,
@@ -44,7 +46,7 @@ pub struct Tag {
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by)
 pub enum OrderBy {
     /// Default
     SeriesCount,
@@ -56,7 +58,7 @@ pub enum OrderBy {
 
 /// Sort order options for the fred/series/observation endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
     Ascending,    
@@ -66,7 +68,7 @@ pub enum SortOrder {
 
 /// A tag group id to filter tags by type.
 /// 
-/// https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id)
+/// https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id)
 pub enum TagGroupId {
     Frequency,
     General,
@@ -80,6 +82,7 @@ pub enum TagGroupId {
 pub struct Builder {
     option_string: String,
     tag_names: String,
+    exclude_tags: String,
 }
 
 impl Builder {
@@ -101,15 +104,23 @@ impl Builder {
         Builder {
             option_string: String::new(),
             tag_names: String::new(),
+            exclude_tags: String::new(),
         }
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
+    /// 
+    /// Returns Err if there are not tag names specified using tag_name().
+    pub fn options(mut self) -> Result<String, String> {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
+        } else {
+            return Err(String::from(TAG_NAME_REQUIRED_ERROR_TEXT));
         }
-        self.option_string
+        if self.exclude_tags.len() > 0 {
+            self.option_string += format!("&exclude_tag_names={}", self.exclude_tags).as_str()
+        }
+        Ok(self.option_string)
     }
 
     /// Adds a realtime_start argument to the builder
@@ -141,6 +152,20 @@ impl Builder {
             self.tag_names.push(';');
         } 
         self.tag_names += tag;
+        self
+    }
+
+    /// Adds a tag name to exclude in the search
+    /// 
+    /// Results must match no excluded tag names.
+    /// 
+    /// # Arguments
+    /// * `tag` - tag name to add
+    pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
+        if self.exclude_tags.len() != 0 {
+            self.exclude_tags.push(';');
+        } 
+        self.exclude_tags += tag;
         self
     }
 
@@ -261,7 +286,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_tags_with_options() {
+    fn series_search_related_tags_with_options_passing() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -273,11 +298,12 @@ mod tests {
 
         let mut builder = Builder::new();
         builder
+            .tag_name("usa")
             .limit(5)
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Popularity);
 
-        let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
+        let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -294,4 +320,33 @@ mod tests {
             );
         }
     } 
+
+    #[test]
+    fn series_search_related_tags_with_options_failure() {
+        let mut c = match FredClient::new() {
+            Ok(c) => c,
+            Err(msg) => {
+                println!("{}", msg);
+                assert_eq!(2, 1);
+                return
+            },
+        };
+
+        let mut builder = Builder::new();
+        builder
+            //.tag_name("usa") exclude to tag to fail the request
+            .limit(5)
+            .sort_order(SortOrder::Descending)
+            .order_by(OrderBy::Popularity);
+
+        let _resp: Response = match c.series_search_related_tags("monetary service index", builder) {
+            Ok(resp) => resp,
+            Err(msg) => {
+                assert_eq!(msg.as_str(), TAG_NAME_REQUIRED_ERROR_TEXT);
+                return
+            },
+        };
+
+        assert_eq!(1, 2); // if the request succeeded then the test failed
+    }
 }

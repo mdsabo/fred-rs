@@ -1,5 +1,5 @@
 
-/// 
+/// Get the tags for a series search.
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -38,6 +38,47 @@
 /// }
 /// ```
 pub mod tags;
+
+/// Get the related tags for a series search.
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::search::related_tags::{Builder, Response, OrderBy, SortOrder};
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .tag_name("usa")
+///     .limit(5)
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Popularity);
+/// 
+/// let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.tags {
+///     println!(
+///         "{}: {}",
+///         item.name,
+///         item.popularity,
+///     );
+/// }
+/// ```
+pub mod related_tags;
 
 // ----------------------------------------------------------------------------
 use serde::Deserialize;
