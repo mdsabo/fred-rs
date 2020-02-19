@@ -214,6 +214,36 @@ impl FredClient {
             Err(e) => return Err(e.to_string()),
         }
     }
+
+    pub fn series_search_tags(
+        &mut self,
+        series_search_text: &str,
+        builder: Option<series::search::tags::Builder>
+    ) -> Result<series::search::tags::Response, String> {
+        let search_text = series_search_text.replace(" ", "%20"); // encode spaces in url
+
+        let mut url: String = format!(
+            "{}series/search/tags?series_search_text={}&api_key={}&file_type=json",
+            self.url_base,
+            search_text,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+        
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
 }
 
 #[cfg(test)]

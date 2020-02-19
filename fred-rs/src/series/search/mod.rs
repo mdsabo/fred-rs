@@ -1,10 +1,51 @@
+
+/// 
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::search::tags::{Builder, Response, OrderBy, SortOrder};
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .limit(5)
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Popularity);
+/// 
+/// let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.tags {
+///     println!(
+///         "{}: {}",
+///         item.name,
+///         item.popularity,
+///     );
+/// }
+/// ```
+pub mod tags;
+
 // ----------------------------------------------------------------------------
 use serde::Deserialize;
 
 #[derive(Deserialize)]
 /// Response data structure for the fred/series endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series.html] (https://research.stlouisfed.org/docs/api/fred/series.html)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search.html] (https://research.stlouisfed.org/docs/api/fred/series_search.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -25,7 +66,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular data series
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series.html](https://research.stlouisfed.org/docs/api/fred/series.html)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search.html](https://research.stlouisfed.org/docs/api/fred/series_search.html)
 pub struct Series {
     /// The series ID name
     pub id: String,
@@ -95,7 +136,7 @@ pub enum OrderBy {
 
 /// Sort order options for the fred/series/observation endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
     Ascending,    
