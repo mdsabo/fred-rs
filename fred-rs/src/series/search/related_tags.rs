@@ -66,7 +66,7 @@ pub enum SortOrder {
     Descending,   
 }
 
-/// A tag group id to filter tags by type.
+/// A tag group id to filter tags by type
 /// 
 /// https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id)
 pub enum TagGroupId {
