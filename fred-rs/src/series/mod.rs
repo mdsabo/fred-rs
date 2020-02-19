@@ -314,7 +314,7 @@ pub struct Series {
     /// Popularity score
     pub popularity: isize,
     /// Additional Notes
-    pub notes: String,
+    pub notes: Option<String>,
 }
 
 pub struct Builder {

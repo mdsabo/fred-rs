@@ -239,7 +239,7 @@ impl Builder {
         self
     }
 
-    /// Adds the search_type argument to the request
+    /// Specifies how to order results
     /// 
     /// # Arguments
     /// * `order` - result ranking system

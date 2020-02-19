@@ -1,3 +1,47 @@
+
+/// fred/tags/series endpoint
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::tags::series::{Builder, Response, SortOrder, OrderBy};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .tag_name("usa")
+///     .limit(5)
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Popularity);
+/// 
+/// let resp: Response = match c.tags_series(builder) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.seriess {
+///     println!(
+///         "{}: {}",
+///         item.id,
+///         item.title
+///     );
+/// }
+/// ```
+pub mod series;
+
+// -----------------------------------------------------------------------------
+
 use serde::Deserialize;
 
 #[derive(Deserialize)]

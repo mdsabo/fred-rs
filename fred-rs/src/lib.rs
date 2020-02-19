@@ -87,7 +87,7 @@ pub mod sources;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::tags::{Builder, Response};
+/// use fred_rs::tags::{Builder, Response, SortOrder, OrderBy};
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -120,4 +120,44 @@ pub mod sources;
 /// ```
 pub mod tags;
 
+
+/// fred/related_tags endpoint
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::related_tags::{Builder, Response, SortOrder, OrderBy};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .tag_name("usa")
+///     .limit(5)
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Popularity);
+/// 
+/// let resp: Response = match c.related_tags(builder) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.tags {
+///     println!(
+///         "{}: {}",
+///         item.name,
+///         item.created
+///     );
+/// }
+/// ```
 pub mod related_tags;

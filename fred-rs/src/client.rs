@@ -394,6 +394,32 @@ impl FredClient {
         }
     }
 
+    pub fn tags_series(
+        &mut self,
+        builder: tags::series::Builder
+    ) -> Result<tags::series::Response, String> {
+        let mut url: String = format!(
+            "{}tags/series?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder.options() {
+            Ok(opt) => url.push_str(opt.as_str()),
+            Err(msg) => return Err(msg),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Related Tags
 

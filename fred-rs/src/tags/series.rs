@@ -1,92 +1,11 @@
-
-/// Get the tags for a series search.
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::tags::{Builder, Response, OrderBy, SortOrder};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Popularity);
-/// 
-/// let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!(
-///         "{}: {}",
-///         item.name,
-///         item.popularity,
-///     );
-/// }
-/// ```
-pub mod tags;
-
-/// Get the related tags for a series search.
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::related_tags::{Builder, Response, OrderBy, SortOrder};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .tag_name("usa")
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Popularity);
-/// 
-/// let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!(
-///         "{}: {}",
-///         item.name,
-///         item.popularity,
-///     );
-/// }
-/// ```
-pub mod related_tags;
-
-// ----------------------------------------------------------------------------
 use serde::Deserialize;
 
+const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
+
 #[derive(Deserialize)]
-/// Response data structure for the fred/series endpoint
+/// Response data structure for the fred/tages/series endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html] (https://research.stlouisfed.org/docs/api/fred/series_search.html)
+/// [https://research.stlouisfed.org/docs/api/fred/tags_series.html] (https://research.stlouisfed.org/docs/api/fred/tags_series.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -94,7 +13,7 @@ pub struct Response {
     pub realtime_end: String,
     /// How the results are ordered
     pub order_by: String,
-    /// Results can be ascending (asc) or descending (desc)
+    // Results can be ascending (asc) or descending (desc)
     pub sort_order: String,
     /// Number of results returned
     pub count: usize,
@@ -109,7 +28,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular data series
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html](https://research.stlouisfed.org/docs/api/fred/series_search.html)
+/// [https://research.stlouisfed.org/docs/api/fred/tags_series.html](https://research.stlouisfed.org/docs/api/fred/tags_series.html)
 pub struct Series {
     /// The series ID name
     pub id: String,
@@ -142,12 +61,12 @@ pub struct Series {
     /// Popularity score within the series group
     pub group_popularity: isize,
     /// Additional Notes
-    pub notes: String,
+    pub notes: Option<String>,
 }
 
 /// Determines the type of search to perform
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#search_type](https://research.stlouisfed.org/docs/api/fred/series_search.html#search_type)
+/// [https://research.stlouisfed.org/docs/api/fred/tags_series.html#search_type](https://research.stlouisfed.org/docs/api/fred/tags_series.html#search_type)
 pub enum SearchType {
     /// (Default) Search series attributes including title, units, frequency and tags
     FullText,
@@ -158,10 +77,8 @@ pub enum SearchType {
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/tags_series.html#order_by](https://research.stlouisfed.org/docs/api/fred/tags_series.html#order_by)
 pub enum OrderBy {
-    /// Default if search type is FULL_TEXT
-    SearchRank,
     /// Default if search type is SERIES_ID
     SeriesId,
     Title,
@@ -200,18 +117,18 @@ pub enum FilterVariable {
 
 pub struct Builder {
     option_string: String,
-    include_tags: String,
+    tag_names: String,
     exclude_tags: String,
 }
 
 impl Builder {
 
-    /// Initializes a new series::search::Builder that can be used to add commands to an API request
+    /// Initializes a new tags::series::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates is unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::tags::series::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -222,33 +139,49 @@ impl Builder {
     pub fn new() -> Builder {
         Builder {
             option_string: String::new(),
-            include_tags: String::new(),
+            tag_names: String::new(),
             exclude_tags: String::new(),
         }
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
-        if self.include_tags.len() > 0 {
-            self.option_string += format!("&tag_names={}", self.include_tags).as_str()
+    pub fn options(mut self) -> Result<String, String> {
+        if self.tag_names.len() > 0 {
+            self.option_string += format!("&tag_names={}", self.tag_names).as_str()
+        } else {
+            return Err(String::from(TAG_NAME_REQUIRED_ERROR_TEXT));
         }
         if self.exclude_tags.len() > 0 {
             self.option_string += format!("&exclude_tag_names={}", self.exclude_tags).as_str()
         }
-        self.option_string
+        Ok(self.option_string)
     }
 
-    /// Adds the search_type argument to the request
+    /// Adds a tag name that all series must match
+    /// 
+    /// Results must match all included tag names.
     /// 
     /// # Arguments
-    /// * `stype` - search type (See SearchType enum)
-    pub fn search_type(&mut self, stype: SearchType) -> &mut Builder {
-        match stype {
-            SearchType::SeriesId => {
-                self.option_string += "&search_type=series_id";
-            },
-            _ => (), // FULL_TEXT is default
-        };
+    /// * `tag` - tag name to add
+    pub fn tag_name(&mut self, tag: &str) -> &mut Builder {
+        if self.tag_names.len() != 0 {
+            self.tag_names.push(';');
+        } 
+        self.tag_names += tag;
+        self
+    }
+
+    /// Adds a tag name that all series must exclude
+    /// 
+    /// Results must match no excluded tag names.
+    /// 
+    /// # Arguments
+    /// * `tag` - tag name to add
+    pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
+        if self.exclude_tags.len() != 0 {
+            self.exclude_tags.push(';');
+        } 
+        self.exclude_tags += tag;
         self
     }
 
@@ -305,9 +238,6 @@ impl Builder {
     /// * `order` - result ranking system
     pub fn order_by(&mut self, order: OrderBy) -> &mut Builder {
         match order {
-            OrderBy::SearchRank => {
-                self.option_string += "&order_by=search_rank";
-            },
             OrderBy::SeriesId => {
                 self.option_string += "&order_by=series_id";
             },
@@ -362,64 +292,6 @@ impl Builder {
         self
     }
 
-    /// Adds the filter_variable argument to the request
-    /// 
-    /// # Arguments
-    /// * `var` - the varible by which to filter
-    pub fn filter_variable(&mut self, var: FilterVariable) -> &mut Builder {
-        match var {
-            FilterVariable::Frequency => {
-                self.option_string += "&filter_variable=frequency";
-            },
-            FilterVariable::Units => {
-                self.option_string += "&filter_variable=units";
-            },
-            FilterVariable::SeasonalAdjustment => {
-                self.option_string += "&filter_variable=seasonal_adjustment";
-            },
-        };
-        self
-    }
-
-    /// Sets the filter value for the specified filter variable
-    /// 
-    /// Results will only include a subset of the original results that match this value for the filter_variable argument.
-    /// 
-    /// # Arguments
-    /// * `val` - the filter value
-    pub fn filter_value(&mut self, val: &str) -> &mut Builder {
-        self.option_string += format!("&filter_value={}", val).as_str();
-        self
-    }
-
-    /// Adds a tag name to include in the search
-    /// 
-    /// Results must match all included tag names.
-    /// 
-    /// # Arguments
-    /// * `tag` - tag name to add
-    pub fn include_tag(&mut self, tag: &str) -> &mut Builder {
-        if self.include_tags.len() != 0 {
-            self.include_tags.push(';');
-        } 
-        self.include_tags += tag;
-        self
-    }
-
-    /// Adds a tag name to exclude in the search
-    /// 
-    /// Results must match no excluded tag names.
-    /// 
-    /// # Arguments
-    /// * `tag` - tag name to add
-    pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
-        if self.exclude_tags.len() != 0 {
-            self.exclude_tags.push(';');
-        } 
-        self.exclude_tags += tag;
-        self
-    }
-
 }
 
 #[cfg(test)]
@@ -428,7 +300,44 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_with_options() {
+    fn tags_series_with_options_passing() {
+        let mut c = match FredClient::new() {
+            Ok(c) => c,
+            Err(msg) => {
+                println!("{}", msg);
+                assert_eq!(2, 1);
+                return
+            },
+        };
+
+        let mut builder = Builder::new();
+        builder
+            .tag_name("usa")
+            .limit(5)
+            .sort_order(SortOrder::Descending)
+            .order_by(OrderBy::Frequency);
+
+        let resp: Response = match c.tags_series(builder) {
+            Ok(resp) => resp,
+            Err(msg) => {
+                println!("{}", msg);
+                assert_eq!(1, 1);
+                return
+            },
+        };
+
+        for item in resp.seriess {
+            println!(
+                "{}: {} {}",
+                item.id,
+                item.title,
+                item.frequency,
+            );
+        }
+    }
+
+    #[test]
+    fn tags_series_with_options_failing() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -444,11 +353,11 @@ mod tests {
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Frequency);
 
-        let resp: Response = match c.series_search("monetary index", Some(builder)) {
+        let resp: Response = match c.tags_series(builder) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
-                assert_eq!(2, 1);
+                assert_eq!(1, 1);
                 return
             },
         };
@@ -461,5 +370,7 @@ mod tests {
                 item.frequency,
             );
         }
+
+        assert_eq!(2, 1); // if the request succeeded then failure
     } 
 }
