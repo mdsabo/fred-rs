@@ -448,6 +448,35 @@ impl FredClient {
             Err(e) => return Err(e.to_string()),
         }
     }
+
+    // ----------------------------------------------------------------------
+    // Sources
+
+    pub fn sources(
+        &mut self,
+        builder: Option<sources::Builder>
+    ) -> Result<sources::Response, String> {
+        let mut url: String = format!(
+            "{}sources?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
 }
 
 #[cfg(test)]
