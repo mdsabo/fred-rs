@@ -393,6 +393,35 @@ impl FredClient {
             Err(e) => return Err(e.to_string()),
         }
     }
+
+    // ----------------------------------------------------------------------
+    // Related Tags
+
+    pub fn related_tags(
+        &mut self,
+        builder: related_tags::Builder
+    ) -> Result<related_tags::Response, String> {
+        let mut url: String = format!(
+            "{}related_tags?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder.options() {
+            Ok(opt) => url.push_str(opt.as_str()),
+            Err(msg) => return Err(msg),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -409,62 +438,4 @@ mod tests {
             },
         }
     }
-
-    #[test]
-    fn series_observation() {
-        let mut c = match FredClient::new() {
-            Ok(c) => c,
-            Err(msg) => {
-                println!("{}", msg);
-                assert_eq!(2, 1);
-                return
-            },
-        };
-
-        let resp: series::observation::Response = match c.series_observation("GNPCA", None) {
-            Ok(resp) => resp,
-            Err(msg) => {
-                println!("{}", msg);
-                assert_eq!(2, 1);
-                return
-            },
-        };
-
-        /*for item in resp.observations {
-            println!("{}: {}", item.date, item.value.parse::<f64>().unwrap());
-        }*/
-        assert_eq!(resp.observations[0].value, String::from("1120.076"));
-    }
-
-    #[test]
-    fn series_observation_with_options() {
-        let mut c = match FredClient::new() {
-            Ok(c) => c,
-            Err(msg) => {
-                println!("{}", msg);
-                assert_eq!(2, 1);
-                return
-            },
-        };
-
-        let mut opt_builder = series::observation::Builder::new();
-        opt_builder
-            .observation_start("2000-01-01")
-            .units(series::observation::Units::PCH)
-            .frequency(series::observation::Frequency::M);
-
-        let resp: series::observation::Response = match c.series_observation("UNRATE", Some(opt_builder)) {
-            Ok(resp) => resp,
-            Err(msg) => {
-                println!("{}", msg);
-                assert_eq!(2, 1);
-                return
-            },
-        };
-
-        for item in resp.observations {
-            println!("{}: {}", item.date, item.value.parse::<f64>().unwrap());
-        }
-        //assert_eq!(resp.observations[0].value, String::from("1120.076"));
-    } 
 }

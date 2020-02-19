@@ -408,3 +408,40 @@ impl Builder {
         self
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::client::FredClient;
+
+    #[test]
+    fn series_observation_with_options() {
+        let mut c = match FredClient::new() {
+            Ok(c) => c,
+            Err(msg) => {
+                println!("{}", msg);
+                assert_eq!(2, 1);
+                return
+            },
+        };
+
+        let mut builder = Builder::new();
+        builder
+            .limit(5)
+            .sort_order(SortOrder::Descending);
+
+        let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
+            Ok(resp) => resp,
+            Err(msg) => {
+                println!("{}", msg);
+                assert_eq!(2, 1);
+                return
+            },
+        };
+
+        for item in resp.observations {
+            println!("{}: {}", item.date, item.value.parse::<f64>().unwrap());
+        }
+        //assert_eq!(resp.observations[0].value, String::from("1120.076"));
+    }
+}

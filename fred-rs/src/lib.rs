@@ -119,3 +119,5 @@ pub mod sources;
 /// }
 /// ```
 pub mod tags;
+
+pub mod related_tags;

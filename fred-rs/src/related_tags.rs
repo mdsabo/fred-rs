@@ -3,9 +3,9 @@ use serde::Deserialize;
 const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/related_tags endpoint
+/// Response data structure for the fred/related_tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/related_tags.html] (https://research.stlouisfed.org/docs/api/fred/related_tags.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -28,7 +28,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/related_tags.html](https://research.stlouisfed.org/docs/api/fred/related_tags.html)
 pub struct Tag {
     /// The tag name
     pub name: String,
@@ -46,7 +46,7 @@ pub struct Tag {
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/related_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/related_tags.html#order_by)
 pub enum OrderBy {
     /// Default
     SeriesCount,
@@ -56,19 +56,19 @@ pub enum OrderBy {
     GroupId,
 }
 
-/// Sort order options for the fred/series/observation endpoint
+/// Sort order options for the fred/related_tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/related_tags.html#sort_order)
 pub enum SortOrder {
-    /// Dates returned in ascending order (default)
+    /// Data returned in ascending order (default)
     Ascending,    
-    /// Dates returned in descending order
+    /// Data returned in descending order
     Descending,   
 }
 
 /// A tag group id to filter tags by type
 /// 
-/// https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id)
+/// https://research.stlouisfed.org/docs/api/fred/related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/related_tags.html#tag_group_id)
 pub enum TagGroupId {
     Frequency,
     General,
@@ -230,7 +230,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_search.html#offset
+    /// [https://research.stlouisfed.org/docs/api/fred/related_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/related_tags.html#offset)
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -286,7 +286,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_related_tags_with_options_passing() {
+    fn related_tags_with_options_passing() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -303,7 +303,7 @@ mod tests {
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Popularity);
 
-        let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
+        let resp: Response = match c.related_tags(builder) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -322,7 +322,7 @@ mod tests {
     } 
 
     #[test]
-    fn series_search_related_tags_with_options_failure() {
+    fn related_tags_with_options_failure() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -339,7 +339,7 @@ mod tests {
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Popularity);
 
-        let _resp: Response = match c.series_search_related_tags("monetary service index", builder) {
+        let _resp: Response = match c.related_tags(builder) {
             Ok(resp) => resp,
             Err(msg) => {
                 assert_eq!(msg.as_str(), TAG_NAME_REQUIRED_ERROR_TEXT);
