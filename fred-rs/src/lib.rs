@@ -84,4 +84,38 @@ pub mod series;
 pub mod sources;
 
 /// fred/tags endpoints
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::tags::{Builder, Response};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder.realtime_start("2000-01-01");
+/// 
+/// let resp: Response = match c.tags(Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.tags {
+///     println!(
+///         "{}: {}",
+///         item.name,
+///         item.created
+///     );
+/// }
+/// ```
 pub mod tags;

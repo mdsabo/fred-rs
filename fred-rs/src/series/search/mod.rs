@@ -136,9 +136,9 @@ pub struct Series {
     /// Date on whih the series was last updated
     pub last_updated: String,
     /// Popularity score
-    pub popularity: usize,
+    pub popularity: isize,
     /// Popularity score within the series group
-    pub group_popularity: usize,
+    pub group_popularity: isize,
     /// Additional Notes
     pub notes: String,
 }

@@ -59,7 +59,7 @@ pub struct Series {
     /// Date on whih the series was last updated
     pub last_updated: String,
     /// Popularity score
-    pub popularity: usize,
+    pub popularity: isize,
 }
 
 /// Used to filter series included in the results

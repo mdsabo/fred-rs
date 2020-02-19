@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/tags endpoint
+/// Response data structure for the fred/tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/tags.html] (https://research.stlouisfed.org/docs/api/fred/tags.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -26,7 +26,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_tags.html](https://research.stlouisfed.org/docs/api/fred/series_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/tags.html](https://research.stlouisfed.org/docs/api/fred/tags.html)
 pub struct Tag {
     /// The tag name
     pub name: String,
@@ -37,7 +37,7 @@ pub struct Tag {
     /// Date and time the tag was created
     pub created: String,
     /// Popularity score
-    pub popularity: usize,
+    pub popularity: isize,
     /// Number of series with the tag
     pub series_count: usize,
 }

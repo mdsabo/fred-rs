@@ -39,7 +39,7 @@ pub struct Tag {
     /// Date and time the tag was created
     pub created: String,
     /// Popularity score
-    pub popularity: usize,
+    pub popularity: isize,
     /// Number of series with the tag
     pub series_count: usize,
 }
