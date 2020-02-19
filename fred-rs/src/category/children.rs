@@ -1,33 +1,26 @@
+
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/sources endpoint
+/// Response data structure for the fred/category endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/source.html] (https://research.stlouisfed.org/docs/api/fred/source.html)
+/// [https://research.stlouisfed.org/docs/api/fred/category_children.html] (https://research.stlouisfed.org/docs/api/fred/category_children.html)
 pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
     /// Series returned by the search
-    pub sources: Vec<Source>,
+    pub categories: Vec<Category>,
 }
 
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/source.html](https://research.stlouisfed.org/docs/api/fred/source.html)
-pub struct Source {
+/// [https://research.stlouisfed.org/docs/api/fred/category_children.html](https://research.stlouisfed.org/docs/api/fred/category_children.html)
+pub struct Category {
     /// The source ID
     pub id: usize,
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
     /// The source name
     pub name: String,
     /// A link to the source's website
-    pub link: Option<String>,
+    pub parent_id: usize,
 }
 
 pub struct Builder {
@@ -36,12 +29,12 @@ pub struct Builder {
 
 impl Builder {
 
-    /// Initializes a new sources::Builder that can be used to add commands to an API request
+    /// Initializes a new category::children::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::sources::Builder;
+    /// use fred_rs::category::children::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -77,7 +70,6 @@ impl Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
         self
     }
-
 }
 
 #[cfg(test)]
@@ -86,7 +78,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn source_no_options() {
+    fn category_children_no_options() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -96,7 +88,7 @@ mod tests {
             },
         };
 
-        let resp: Response = match c.source(1, None) {
+        let resp: Response = match c.category_children(125) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -105,11 +97,8 @@ mod tests {
             },
         };
 
-        for s in resp.sources {
-            match s.link {
-                Some(l) => println!("{}: {}", s.name, l),
-                None => println!("{}", s.name)
-            }
+        for s in resp.categories {
+            println!("ID: {}  Name: {}  ParentID: {}", s.id, s.name, s.parent_id);
         }
     } 
 }

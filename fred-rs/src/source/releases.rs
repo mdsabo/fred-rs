@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/tags endpoint
+/// Response data structure for the fred/sources endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/sources.html] (https://research.stlouisfed.org/docs/api/fred/sources.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -20,38 +20,40 @@ pub struct Response {
     /// Maximum number of results to return
     pub limit: usize,
     /// Series returned by the search
-    pub tags: Vec<Tag>,
+    pub releases: Vec<Release>,
 }
 
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
-pub struct Tag {
-    /// The tag name
+/// [https://research.stlouisfed.org/docs/api/fred/sources.html](https://research.stlouisfed.org/docs/api/fred/sources.html)
+pub struct Release {
+    /// The series ID
+    pub id: usize,
+    /// The Real Time start date for the request
+    pub realtime_start: String,
+    /// The Real Time end data for the request
+    pub realtime_end: String,
+    /// The series name
     pub name: String,
-    /// The group ID string
-    pub group_id: String,
-    /// Additonal information about the tag (e.g. authors or sources)
-    pub notes: Option<String>,
-    /// Date and time the tag was created
-    pub created: String,
-    /// Popularity score
-    pub popularity: usize,
-    /// Number of series with the tag
-    pub series_count: usize,
+    /// True if the release included a press release
+    pub press_release: bool,
+    /// A link to the press selease if avaialable
+    /// 
+    /// Not guaranteed even if press_release is True
+    pub link: Option<String>,
 }
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/source_releases.html#order_by](https://research.stlouisfed.org/docs/api/fred/source_releases.html#order_by)
 pub enum OrderBy {
     /// Default
-    SeriesCount,
-    Popularity,
-    Created,
+    ReleaseId,
     Name,
-    GroupId,
+    PressRelease,
+    RealtimeStart,
+    RealtimeEnd,
 }
 
 /// Sort order options for the fred/series/observation endpoint
@@ -64,32 +66,18 @@ pub enum SortOrder {
     Descending,   
 }
 
-/// A tag group id to filter tags by type.
-/// 
-/// https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id)
-pub enum TagGroupId {
-    Frequency,
-    General,
-    Geography,
-    GeographyType,
-    Release,
-    SeasonalAdjustment,
-    Source,
-}
-
 pub struct Builder {
     option_string: String,
-    tag_names: String,
 }
 
 impl Builder {
 
-    /// Initializes a new series::search::Builder that can be used to add commands to an API request
+    /// Initializes a new sources::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::sources::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -100,15 +88,11 @@ impl Builder {
     pub fn new() -> Builder {
         Builder {
             option_string: String::new(),
-            tag_names: String::new(),
         }
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
-        if self.tag_names.len() > 0 {
-            self.option_string += format!("&tag_names={}", self.tag_names).as_str()
-        }
+    pub fn options(self) -> String {
         self.option_string
     }
 
@@ -127,61 +111,6 @@ impl Builder {
     /// * `end_date` - date formatted as YYYY-MM-DD
     pub fn realtime_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
-        self
-    }
-
-    /// Adds a tag name to include in the search
-    /// 
-    /// Results must match all included tag names.
-    /// 
-    /// # Arguments
-    /// * `tag` - tag name to add
-    pub fn tag_name(&mut self, tag: &str) -> &mut Builder {
-        if self.tag_names.len() != 0 {
-            self.tag_names.push(';');
-        } 
-        self.tag_names += tag;
-        self
-    }
-
-    /// Adds a group id filter to the results
-    /// 
-    /// # Arguments
-    /// * `id` - type by which to filter results
-    pub fn tag_group_id(&mut self, id: TagGroupId) -> &mut Builder {
-        match id {
-            TagGroupId::Frequency => {
-                self.option_string += "&tag_group_id=freq";
-            },
-            TagGroupId::General => {
-                self.option_string += "&tag_group_id=gen";
-            },
-            TagGroupId::Geography => {
-                self.option_string += "&tag_group_id=geo";
-            },
-            TagGroupId::GeographyType => {
-                self.option_string += "&tag_group_id=geot";
-            },
-            TagGroupId::Release => {
-                self.option_string += "&tag_group_id=rls";
-            },
-            TagGroupId::SeasonalAdjustment => {
-                self.option_string += "&tag_group_id=seas";
-            },
-            TagGroupId::Source => {
-                self.option_string += "&tag_group_id=src";
-            },
-        };
-        self
-    }
-
-    /// Add search string to find matching tags with
-    /// 
-    /// # Arguments
-    /// * `search_string` - tag name to add
-    pub fn tag_search_text(&mut self, search_string: &str) -> &mut Builder {
-        let search_string = search_string.replace(" ", "%20"); // encode for URL
-        self.option_string += format!("&tag_search_text={}", search_string).as_str();
         self
     }
 
@@ -205,7 +134,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// [https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset)
+    /// [https://research.stlouisfed.org/docs/api/fred/source_releases.html#offset](https://research.stlouisfed.org/docs/api/fred/source_releases.html#offset)
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -220,20 +149,20 @@ impl Builder {
     /// * `order` - result ranking system
     pub fn order_by(&mut self, order: OrderBy) -> &mut Builder {
         match order {
-            OrderBy::SeriesCount => {
-                self.option_string += "&order_by=series_count";
-            },
-            OrderBy::Popularity => {
-                self.option_string += "&order_by=popularity";
-            },
-            OrderBy::Created => {
-                self.option_string += "&order_by=created";
+            OrderBy::ReleaseId => {
+                self.option_string += "&order_by=release_id";
             },
             OrderBy::Name => {
                 self.option_string += "&order_by=name";
             },
-            OrderBy::GroupId => {
-                self.option_string += "&order_by=group_id";
+            OrderBy::PressRelease => {
+                self.option_string += "&order_by=press_release";
+            },
+            OrderBy::RealtimeStart => {
+                self.option_string += "&order_by=realtime_start";
+            },
+            OrderBy::RealtimeEnd => {
+                self.option_string += "&order_by=realtime_end";
             },
         };
         self
@@ -261,7 +190,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_tags_with_options() {
+    fn source_releases_with_options() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -274,10 +203,10 @@ mod tests {
         let mut builder = Builder::new();
         builder
             .limit(5)
-            .sort_order(SortOrder::Descending)
-            .order_by(OrderBy::Popularity);
+            .order_by(OrderBy::Name)
+            .sort_order(SortOrder::Descending);
 
-        let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
+        let resp: Response = match c.source_releases(1, Some(builder)) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -286,12 +215,11 @@ mod tests {
             },
         };
 
-        for item in resp.tags {
-            println!(
-                "{}: {}",
-                item.name,
-                item.popularity,
-            );
+        for item in resp.releases {
+            match item.link {
+                Some(l) => println!("{}: {}", item.name, l),
+                None => println!("{}: No Link", item.name),
+            }
         }
     } 
 }

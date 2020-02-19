@@ -35,7 +35,34 @@
 /// ```
 pub mod client;
 
-/// fred/category endpoints
+/// fred/category endpoint
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::category::Response;
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let resp: Response = match c.category(125) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for s in resp.categories {
+///     println!("ID: {}  Name: {}  ParentID: {}", s.id, s.name, s.parent_id);
+/// }
+/// ```
 pub mod category;
 
 /// fred/releases endpoints

@@ -351,9 +351,7 @@ impl FredClient {
             Ok(s) => url.push_str(s.as_str()),
             Err(msg) => return Err(msg),
         }
-
-        println!("{}", url);
-        
+                
         match self.get_request(url.as_str()) {
             Ok(resp) => {
                 match serde_json::from_str(&resp.text().unwrap()) {
@@ -497,6 +495,191 @@ impl FredClient {
             Some(b) => url.push_str(b.options().as_str()),
             None => (),
         }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn source_releases(
+        &mut self,
+        source_id: usize,
+        builder: Option<source::releases::Builder>
+    ) -> Result<source::releases::Response, String> {
+        let mut url: String = format!(
+            "{}source/releases?source_id={}&api_key={}&file_type=json",
+            self.url_base,
+            source_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Category
+
+    pub fn category(
+        &mut self,
+        category_id: usize
+    ) -> Result<category::Response, String> {
+        let url: String = format!(
+            "{}category?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn category_children(
+        &mut self,
+        category_id: usize
+    ) -> Result<category::children::Response, String> {
+        let url: String = format!(
+            "{}category/children?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn category_related(
+        &mut self,
+        category_id: usize
+    ) -> Result<category::related::Response, String> {
+        let url: String = format!(
+            "{}category/related?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn category_series(
+        &mut self,
+        category_id: usize,
+        builder: Option<category::series::Builder>
+    ) -> Result<category::series::Response, String> {
+        let mut url: String = format!(
+            "{}category/series?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn category_tags(
+        &mut self,
+        category_id: usize,
+        builder: Option<category::tags::Builder>
+    ) -> Result<category::tags::Response, String> {
+        let mut url: String = format!(
+            "{}category/tags?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        println!("{}", url);
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn category_related_tags(
+        &mut self,
+        category_id: usize,
+        builder: category::related_tags::Builder
+    ) -> Result<category::related_tags::Response, String> {
+        let mut url: String = format!(
+            "{}category/related_tags?category_id={}&api_key={}&file_type=json",
+            self.url_base,
+            category_id,
+            self.api_key
+        );
+
+        match builder.options() {
+            Ok(o) => url.push_str(o.as_str()),
+            Err(msg) => return Err(msg),
+        }
+
+        println!("{}", url);
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {

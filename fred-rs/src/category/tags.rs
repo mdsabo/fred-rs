@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/tags endpoint
+/// Response data structure for the fred/category/tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html] (https://research.stlouisfed.org/docs/api/fred/category_tags.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -26,7 +26,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html](https://research.stlouisfed.org/docs/api/fred/category_tags.html)
 pub struct Tag {
     /// The tag name
     pub name: String,
@@ -44,7 +44,7 @@ pub struct Tag {
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/category_tags.html#order_by)
 pub enum OrderBy {
     /// Default
     SeriesCount,
@@ -56,7 +56,7 @@ pub enum OrderBy {
 
 /// Sort order options for the fred/series/observation endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/category_tags.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
     Ascending,    
@@ -66,7 +66,7 @@ pub enum SortOrder {
 
 /// A tag group id to filter tags by type.
 /// 
-/// https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#tag_group_id)
+/// https://research.stlouisfed.org/docs/api/fred/category_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/cateogry_tags.html#tag_group_id)
 pub enum TagGroupId {
     Frequency,
     General,
@@ -84,12 +84,12 @@ pub struct Builder {
 
 impl Builder {
 
-    /// Initializes a new series::search::Builder that can be used to add commands to an API request
+    /// Initializes a new category::tags::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::category::tags::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -179,7 +179,7 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `search_string` - tag name to add
-    pub fn tag_search_text(&mut self, search_string: &str) -> &mut Builder {
+    pub fn search_text(&mut self, search_string: &str) -> &mut Builder {
         let search_string = search_string.replace(" ", "%20"); // encode for URL
         self.option_string += format!("&tag_search_text={}", search_string).as_str();
         self
@@ -205,7 +205,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// [https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset)
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#offset)
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -261,7 +261,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_tags_with_options() {
+    fn category_tags_with_options() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -277,7 +277,7 @@ mod tests {
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Popularity);
 
-        let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
+        let resp: Response = match c.category_tags(125, Some(builder)) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -288,9 +288,10 @@ mod tests {
 
         for item in resp.tags {
             println!(
-                "{}: {}",
+                "{}: {} {}",
                 item.name,
-                item.popularity,
+                item.series_count,
+                item.popularity
             );
         }
     } 
