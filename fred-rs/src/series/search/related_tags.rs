@@ -87,12 +87,12 @@ pub struct Builder {
 
 impl Builder {
 
-    /// Initializes a new series::search::Builder that can be used to add commands to an API request
+    /// Initializes a new series::search::related_tags::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::series::search::related_tags::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
