@@ -205,7 +205,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_search.html#offset
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#offset)
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount

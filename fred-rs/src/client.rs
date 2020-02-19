@@ -241,6 +241,35 @@ impl FredClient {
         }
     }
 
+    pub fn series_vintagedates(
+        &mut self,
+        series_id: &str,
+        builder: Option<series::vintagedates::Builder>
+    ) -> Result<series::vintagedates::Response, String> {
+
+        let mut url: String = format!(
+            "{}series/vintagedates?series_id={}&api_key={}&file_type=json",
+            self.url_base,
+            series_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+        
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Series/Search
     pub fn series_search(
@@ -325,6 +354,35 @@ impl FredClient {
 
         println!("{}", url);
         
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Tags
+
+    pub fn tags(
+        &mut self,
+        builder: Option<tags::Builder>
+    ) -> Result<tags::Response, String> {
+        let mut url: String = format!(
+            "{}tags?api_key={}&file_type=json",
+            self.url_base,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
         match self.get_request(url.as_str()) {
             Ok(resp) => {
                 match serde_json::from_str(&resp.text().unwrap()) {

@@ -145,10 +145,7 @@ pub mod release;
 ///     );
 /// }
 /// ```
-
 pub mod tags;
-
-// ----------------------------------------------------------------------------
 
 /// Get economic data series that match keywords
 /// 
@@ -191,7 +188,79 @@ pub mod tags;
 /// ```
 pub mod search;
 
+/// Get economic data series sorted by when observations were updated on the FRED® server
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::updates::{Builder, Response};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .limit(5);
+/// 
+/// let resp: Response = match c.series_updates(Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.seriess {
+///     println!(
+///         "{}: {} {}",
+///         item.title,
+///         item.id,
+///         item.popularity,
+///     );
+/// }
+/// ```
 pub mod updates;
+
+/// Get the dates in history when a series' data values were revised or new data values were released
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::vintagedates::{Builder, Response, SortOrder};
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .sort_order(SortOrder::Descending)
+///     .limit(5);
+/// 
+/// let resp: Response = match c.series_vintagedates("GNPCA", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.vintage_dates {
+///     println!("{}", item);
+/// }
+/// ```
+pub mod vintagedates;
 
 // ----------------------------------------------------------------------------
 use serde::Deserialize;
