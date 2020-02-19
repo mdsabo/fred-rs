@@ -1,5 +1,5 @@
 
-/// Get the categories for an economic data series.
+/// Get the categories for an economic data series
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_categories.html](https://research.stlouisfed.org/docs/api/fred/series_categories.html)
 /// 
@@ -35,7 +35,7 @@
 /// ```
 pub mod categories;
 
-/// Get the observations (data points) for an economic data series.
+/// Get the observations (data points) for an economic data series
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
 /// 
@@ -72,7 +72,7 @@ pub mod categories;
 /// ```
 pub mod observation;
 
-/// Get the release for an economic data series.
+/// Get the release for an economic data series
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_release.html](https://research.stlouisfed.org/docs/api/fred/series_release.html)
 /// 
@@ -108,9 +108,49 @@ pub mod observation;
 /// ```
 pub mod release;
 
+/// Get the tags for an economic data series
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::series::tags::{Builder, Response, SortOrder, OrderBy};
+/// 
+/// let mut c = match FredClient::new() {
+///     Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Popularity);
+/// 
+/// let resp: Response = match c.series_tags("STLFSI", Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.tags {
+///     println!(
+///         "{}: {}",
+///         item.name,
+///         item.popularity,
+///     );
+/// }
+/// ```
+
+pub mod tags;
+
 // ----------------------------------------------------------------------------
 
-/// Get economic data series that match keywords.
+/// Get economic data series that match keywords
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
