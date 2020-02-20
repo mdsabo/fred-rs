@@ -1,11 +1,9 @@
 use serde::Deserialize;
 
-const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
-
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/related_tags endpoint
+/// Response data structure for the fred/releases/tags endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html] (https://research.stlouisfed.org/docs/api/fred/release_tags.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -28,7 +26,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular tag
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
+/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html](https://research.stlouisfed.org/docs/api/fred/release_tags.html)
 pub struct Tag {
     /// The tag name
     pub name: String,
@@ -46,7 +44,7 @@ pub struct Tag {
 
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/release_tags.html#order_by)
 pub enum OrderBy {
     /// Default
     SeriesCount,
@@ -58,7 +56,7 @@ pub enum OrderBy {
 
 /// Sort order options for the fred/series/observation endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/release_tags.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
     Ascending,    
@@ -66,9 +64,9 @@ pub enum SortOrder {
     Descending,   
 }
 
-/// A tag group id to filter tags by type
+/// A tag group id to filter tags by type.
 /// 
-/// https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id)
+/// https://research.stlouisfed.org/docs/api/fred/release_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/release_tags.html#tag_group_id)
 pub enum TagGroupId {
     Frequency,
     General,
@@ -82,17 +80,16 @@ pub enum TagGroupId {
 pub struct Builder {
     option_string: String,
     tag_names: String,
-    exclude_tags: String,
 }
 
 impl Builder {
 
-    /// Initializes a new series::search::related_tags::Builder that can be used to add commands to an API request
+    /// Initializes a new release::tags::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::related_tags::Builder;
+    /// use fred_rs::release::tags::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -104,23 +101,15 @@ impl Builder {
         Builder {
             option_string: String::new(),
             tag_names: String::new(),
-            exclude_tags: String::new(),
         }
     }
 
     /// Returns the current arguments as a URL formatted string
-    /// 
-    /// Returns Err if there are no tag names specified using tag_name().
-    pub fn options(mut self) -> Result<String, String> {
+    pub fn options(mut self) -> String {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
-        } else {
-            return Err(String::from(TAG_NAME_REQUIRED_ERROR_TEXT));
         }
-        if self.exclude_tags.len() > 0 {
-            self.option_string += format!("&exclude_tag_names={}", self.exclude_tags).as_str()
-        }
-        Ok(self.option_string)
+        self.option_string
     }
 
     /// Adds a realtime_start argument to the builder
@@ -152,20 +141,6 @@ impl Builder {
             self.tag_names.push(';');
         } 
         self.tag_names += tag;
-        self
-    }
-
-    /// Adds a tag name to exclude in the search
-    /// 
-    /// Results must match no excluded tag names.
-    /// 
-    /// # Arguments
-    /// * `tag` - tag name to add
-    pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
-        if self.exclude_tags.len() != 0 {
-            self.exclude_tags.push(';');
-        } 
-        self.exclude_tags += tag;
         self
     }
 
@@ -230,7 +205,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_search.html#offset
+    /// [https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/category_tags.html#offset)
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -239,7 +214,7 @@ impl Builder {
         self
     }
 
-    /// Specifies how to order results
+    /// Adds the search_type argument to the request
     /// 
     /// # Arguments
     /// * `order` - result ranking system
@@ -286,7 +261,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_related_tags_with_options_passing() {
+    fn release_tags_with_options() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -298,12 +273,11 @@ mod tests {
 
         let mut builder = Builder::new();
         builder
-            .tag_name("usa")
             .limit(5)
             .sort_order(SortOrder::Descending)
-            .order_by(OrderBy::Popularity);
+            .order_by(OrderBy::Created);
 
-        let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
+        let resp: Response = match c.release_tags(86, Some(builder)) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);
@@ -316,37 +290,8 @@ mod tests {
             println!(
                 "{}: {}",
                 item.name,
-                item.popularity,
+                item.created,
             );
         }
     } 
-
-    #[test]
-    fn series_search_related_tags_with_options_failure() {
-        let mut c = match FredClient::new() {
-            Ok(c) => c,
-            Err(msg) => {
-                println!("{}", msg);
-                assert_eq!(2, 1);
-                return
-            },
-        };
-
-        let mut builder = Builder::new();
-        builder
-            //.tag_name("usa") exclude to tag to fail the request
-            .limit(5)
-            .sort_order(SortOrder::Descending)
-            .order_by(OrderBy::Popularity);
-
-        let _resp: Response = match c.series_search_related_tags("monetary service index", builder) {
-            Ok(resp) => resp,
-            Err(msg) => {
-                assert_eq!(msg.as_str(), TAG_NAME_REQUIRED_ERROR_TEXT);
-                return
-            },
-        };
-
-        assert_eq!(1, 2); // if the request succeeded then the test failed
-    }
 }

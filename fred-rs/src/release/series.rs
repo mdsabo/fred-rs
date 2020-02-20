@@ -1,92 +1,9 @@
-
-/// Get the tags for a series search.
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::tags::{Builder, Response, OrderBy, SortOrder};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Popularity);
-/// 
-/// let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!(
-///         "{}: {}",
-///         item.name,
-///         item.popularity,
-///     );
-/// }
-/// ```
-pub mod tags;
-
-/// Get the related tags for a series search.
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::related_tags::{Builder, Response, OrderBy, SortOrder};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .tag_name("usa")
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Popularity);
-/// 
-/// let resp: Response = match c.series_search_related_tags("monetary service index", builder) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!(
-///         "{}: {}",
-///         item.name,
-///         item.popularity,
-///     );
-/// }
-/// ```
-pub mod related_tags;
-
-// ----------------------------------------------------------------------------
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series endpoint
+/// Response data structure for the fred/release/series endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html] (https://research.stlouisfed.org/docs/api/fred/series_search.html)
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html] (https://research.stlouisfed.org/docs/api/fred/release_series.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
@@ -109,7 +26,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular data series
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html](https://research.stlouisfed.org/docs/api/fred/series_search.html)
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html](https://research.stlouisfed.org/docs/api/fred/release_series.html)
 pub struct Series {
     /// The series ID name
     pub id: String,
@@ -145,24 +62,11 @@ pub struct Series {
     pub notes: Option<String>,
 }
 
-/// Determines the type of search to perform
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#search_type](https://research.stlouisfed.org/docs/api/fred/series_search.html#search_type)
-pub enum SearchType {
-    /// (Default) Search series attributes including title, units, frequency and tags
-    FullText,
-    /// Search only the series ID number
-    /// Wildcards are accepted with this options
-    SeriesId,
-}
-
 /// Determines the order of search results
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search.html#order_by)
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html#order_by](https://research.stlouisfed.org/docs/api/fred/release_series.html#order_by)
 pub enum OrderBy {
-    /// Default if search type is FULL_TEXT
-    SearchRank,
-    /// Default if search type is SERIES_ID
+    /// Default
     SeriesId,
     Title,
     Units,
@@ -179,7 +83,7 @@ pub enum OrderBy {
 
 /// Sort order options for the fred/series/observation endpoint
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search.html#sort_order)
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order](https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order)
 pub enum SortOrder {
     /// Dates returned in ascending order (default)
     Ascending,    
@@ -191,7 +95,7 @@ pub enum SortOrder {
 /// 
 /// This should be used in conjunction with the filter_value argument to filter results based on one (maybe more than one?) of the fields.
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html#filter_variable](https://research.stlouisfed.org/docs/api/fred/series_search.html#filter_variable)
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_variable](https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_variable)
 pub enum FilterVariable {
     Frequency,
     Units,
@@ -206,12 +110,12 @@ pub struct Builder {
 
 impl Builder {
 
-    /// Initializes a new series::search::Builder that can be used to add commands to an API request
+    /// Initializes a new release::series::Builder that can be used to add commands to an API request
     /// 
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::release::series::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder
@@ -236,20 +140,6 @@ impl Builder {
             self.option_string += format!("&exclude_tag_names={}", self.exclude_tags).as_str()
         }
         self.option_string
-    }
-
-    /// Adds the search_type argument to the request
-    /// 
-    /// # Arguments
-    /// * `stype` - search type (See SearchType enum)
-    pub fn search_type(&mut self, stype: SearchType) -> &mut Builder {
-        match stype {
-            SearchType::SeriesId => {
-                self.option_string += "&search_type=series_id";
-            },
-            _ => (), // FULL_TEXT is default
-        };
-        self
     }
 
     /// Adds a realtime_start argument to the builder
@@ -290,7 +180,7 @@ impl Builder {
     /// 
     /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
     /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_search.html#offset
+    /// https://research.stlouisfed.org/docs/api/fred/release_series.html#offset
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
@@ -305,9 +195,6 @@ impl Builder {
     /// * `order` - result ranking system
     pub fn order_by(&mut self, order: OrderBy) -> &mut Builder {
         match order {
-            OrderBy::SearchRank => {
-                self.option_string += "&order_by=search_rank";
-            },
             OrderBy::SeriesId => {
                 self.option_string += "&order_by=series_id";
             },
@@ -428,7 +315,7 @@ mod tests {
     use crate::client::FredClient;
 
     #[test]
-    fn series_search_with_options() {
+    fn release_series_with_options() {
         let mut c = match FredClient::new() {
             Ok(c) => c,
             Err(msg) => {
@@ -444,7 +331,7 @@ mod tests {
             .sort_order(SortOrder::Descending)
             .order_by(OrderBy::Frequency);
 
-        let resp: Response = match c.series_search("monetary index", Some(builder)) {
+        let resp: Response = match c.release_series(9, Some(builder)) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);

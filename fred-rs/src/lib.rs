@@ -101,6 +101,40 @@ pub mod category;
 /// ```
 pub mod releases;
 
+/// fred/release endpoints
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::release::{Builder, Response};
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .realtime_start("2000-01-01");
+/// 
+/// let resp: Response = match c.release(9, Some(builder)) {
+/// Ok(resp) => resp,
+/// Err(msg) => {
+///     println!("{}", msg);
+///     assert_eq!(2, 1);
+///     return
+///     },
+/// };
+/// 
+/// for item in resp.releases {
+///     println!("{}: {}", item.id, item.name);
+/// }
+/// ```
+pub mod release;
+
 /// fred/series endpoints
 /// 
 /// ```

@@ -75,7 +75,7 @@ impl Builder {
     /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
     /// 
     /// ```
-    /// use fred_rs::series::search::Builder;
+    /// use fred_rs::series::search::tags::Builder;
     /// // Create a new builder
     /// let mut builder = Builder::new();
     /// // add arguments to the builder

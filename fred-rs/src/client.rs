@@ -37,7 +37,7 @@ impl FredClient {
     /// ```
     pub fn new() -> Result<FredClient, String> {
 
-        let client = match Client::builder().timeout(Duration::from_secs(10)).build() {
+        let client = match Client::builder().timeout(Duration::from_secs(30)).build() {
             Ok(c) => c,
             Err(msg) => return Err(msg.to_string()),
         };
@@ -739,6 +739,179 @@ impl FredClient {
         match self.get_request(url.as_str()) {
             Ok(resp) => {
                 match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Release
+
+    pub fn release(
+        &mut self,
+        release_id: usize,
+        builder: Option<release::Builder>
+    ) -> Result<release::Response, String> {
+        let mut url: String = format!(
+            "{}release?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn release_series(
+        &mut self,
+        release_id: usize,
+        builder: Option<release::series::Builder>
+    ) -> Result<release::series::Response, String> {
+        let mut url: String = format!(
+            "{}release/series?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn release_sources(
+        &mut self,
+        release_id: usize,
+        builder: Option<release::sources::Builder>
+    ) -> Result<release::sources::Response, String> {
+        let mut url: String = format!(
+            "{}release/sources?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn release_tags(
+        &mut self,
+        release_id: usize,
+        builder: Option<release::tags::Builder>
+    ) -> Result<release::tags::Response, String> {
+        let mut url: String = format!(
+            "{}release/tags?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn release_related_tags(
+        &mut self,
+        release_id: usize,
+        builder: release::related_tags::Builder
+    ) -> Result<release::related_tags::Response, String> {
+        let mut url: String = format!(
+            "{}release/related_tags?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder.options() {
+            Ok(o) => url.push_str(o.as_str()),
+            Err(msg) => return Err(msg),
+        }
+
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                match serde_json::from_str(&resp.text().unwrap()) {
+                    Ok(val) => Ok(val),
+                    Err(e) => return Err(e.to_string()),
+                }
+            },
+            Err(e) => return Err(e.to_string()),
+        }
+    }
+
+    pub fn release_tables(
+        &mut self,
+        release_id: usize,
+        builder: Option<release::tables::Builder>
+    ) -> Result<release::tables::Response, String> {
+        let mut url: String = format!(
+            "{}release/tables?release_id={}&api_key={}&file_type=json",
+            self.url_base,
+            release_id,
+            self.api_key
+        );
+
+        match builder {
+            Some(b) => url.push_str(b.options().as_str()),
+            None => (),
+        }
+        
+        match self.get_request(url.as_str()) {
+            Ok(resp) => {
+                let text = resp.text().unwrap();
+                println!("Full Text: {}", text);
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
                     Err(e) => return Err(e.to_string()),
                 }
