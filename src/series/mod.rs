@@ -5,7 +5,8 @@
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::categories::{Builder, Response};
+/// use fred_rs::series::categories::Builder;
+/// use fred_rs::category::Response;
 /// 
 /// // Create the client object
 /// let mut c = match FredClient::new() {
@@ -78,7 +79,8 @@ pub mod observation;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::categories::{Builder, Response};
+/// use fred_rs::series::categories::Builder;
+/// use fred_rs::category::Response;
 /// 
 /// // Create the client object
 /// let mut c = match FredClient::new() {
@@ -112,7 +114,8 @@ pub mod release;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::tags::{Builder, Response, SortOrder, OrderBy};
+/// use fred_rs::series::tags::{Builder, SortOrder, OrderBy};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -397,7 +400,8 @@ mod tests {
         };
 
         let mut builder = Builder::new();
-        builder.realtime_start("2000-01-01");
+        builder
+            .realtime_start("2000-01-01");
 
         let resp: Response = match c.series("UNRATE", Some(builder)) {
             Ok(resp) => resp,

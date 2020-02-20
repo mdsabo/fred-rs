@@ -92,9 +92,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -120,9 +134,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -148,9 +176,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -176,9 +218,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -205,9 +261,23 @@ impl FredClient {
         
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -232,9 +302,23 @@ impl FredClient {
         
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -261,9 +345,23 @@ impl FredClient {
         
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -293,9 +391,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -323,9 +435,23 @@ impl FredClient {
         
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -354,9 +480,23 @@ impl FredClient {
                 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -383,9 +523,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -409,9 +563,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -438,9 +606,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -467,9 +649,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -498,9 +694,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -526,9 +736,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -551,9 +775,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -573,9 +811,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -595,9 +847,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -623,9 +889,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -653,9 +933,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -683,9 +977,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -712,9 +1020,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -738,9 +1060,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -769,9 +1105,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -797,9 +1147,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -825,9 +1189,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -853,9 +1231,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -881,9 +1273,23 @@ impl FredClient {
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
-                match serde_json::from_str(&resp.text().unwrap()) {
+                let text = resp.text().unwrap();
+                match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),
@@ -910,10 +1316,22 @@ impl FredClient {
         match self.get_request(url.as_str()) {
             Ok(resp) => {
                 let text = resp.text().unwrap();
-                println!("Full Text: {}", text);
                 match serde_json::from_str(&text) {
                     Ok(val) => Ok(val),
-                    Err(e) => return Err(e.to_string()),
+                    Err(_e) => {
+                        match serde_json::from_str(&text) {
+                            Ok(e) => {
+                                let err: error::FredError = e;
+                                let err_msg = format!(
+                                    "ERROR {}: {}",
+                                    err.error_code,
+                                    err.error_message
+                                );
+                                return Err(err_msg);
+                            },
+                            Err(msg) => return Err(String::from(msg.to_string())),
+                        }
+                    },
                 }
             },
             Err(e) => return Err(e.to_string()),

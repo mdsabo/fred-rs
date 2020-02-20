@@ -3,7 +3,7 @@
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::category::children::Response;
+/// use fred_rs::category::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -33,7 +33,7 @@ pub mod children;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::category::related::Response;
+/// use fred_rs::category::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -63,7 +63,8 @@ pub mod related;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::category::series::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::category::series::{Builder, OrderBy, SortOrder};
+/// use fred_rs::series::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -105,7 +106,8 @@ pub mod series;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::category::tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::category::tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -146,7 +148,8 @@ pub mod tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::category::related_tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::category::related_tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,

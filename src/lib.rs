@@ -69,7 +69,8 @@ pub mod category;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::releases::{Builder, Response, SortOrder, OrderBy};
+/// use fred_rs::releases::{Builder, SortOrder, OrderBy};
+/// use fred_rs::release::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -216,7 +217,8 @@ pub mod tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::related_tags::{Builder, Response, SortOrder, OrderBy};
+/// use fred_rs::related_tags::{Builder, SortOrder, OrderBy};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -257,7 +259,8 @@ pub mod related_tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::sources::{Builder, Response, SortOrder};
+/// use fred_rs::sources::{Builder, SortOrder};
+/// use fred_rs::source::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
@@ -323,3 +326,5 @@ pub mod sources;
 /// }
 /// ```
 pub mod source;
+
+mod error;

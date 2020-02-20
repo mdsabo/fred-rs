@@ -3,7 +3,8 @@
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::release::series::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::release::series::{Builder, OrderBy, SortOrder};
+/// use fred_rs::series::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -44,7 +45,8 @@ pub mod series;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::release::sources::{Builder, Response};
+/// use fred_rs::release::sources::Builder;
+/// use fred_rs::source::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -78,7 +80,8 @@ pub mod sources;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::release::tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::release::tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -114,7 +117,8 @@ pub mod tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::release::related_tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::release::related_tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,

@@ -3,7 +3,8 @@
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::source::releases::{Builder, Response, SortOrder, OrderBy};
+/// use fred_rs::source::releases::{Builder, SortOrder, OrderBy};
+/// use fred_rs::release::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,
