@@ -43,7 +43,7 @@ pub mod releases;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/sources endpoint
+/// Response data structure for the fred/source endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/source.html] (https://research.stlouisfed.org/docs/api/fred/source.html)
 pub struct Response {
@@ -51,6 +51,16 @@ pub struct Response {
     pub realtime_start: String,
     /// The Real Time end data for the request
     pub realtime_end: String,
+    /// How the results are ordered
+    pub order_by: Option<String>,
+    // Results are listed in ascending or descending
+    pub sort_order: Option<String>,
+    /// Number of results returned
+    pub count: Option<usize>,
+    /// ???
+    pub offset: Option<usize>,
+    /// Maximum number of results to return
+    pub limit: Option<usize>,
     /// Series returned by the search
     pub sources: Vec<Source>,
 }
@@ -70,6 +80,8 @@ pub struct Source {
     pub name: String,
     /// A link to the source's website
     pub link: Option<String>,
+    /// Additional notes about the source
+    pub notes: Option<String>
 }
 
 pub struct Builder {

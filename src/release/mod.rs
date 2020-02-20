@@ -193,6 +193,16 @@ pub struct Response {
     pub realtime_start: String,
     /// The Real Time end data for the request
     pub realtime_end: String,
+    /// How the results are ordered
+    pub order_by: Option<String>,
+    // Results are listed in ascending or descending
+    pub sort_order: Option<String>,
+    /// Number of results returned
+    pub count: Option<usize>,
+    /// ???
+    pub offset: Option<usize>,
+    /// Maximum number of results to return
+    pub limit: Option<usize>,
     /// List of releases related to the specified series_id
     pub releases: Vec<Release>,
 }
@@ -200,7 +210,7 @@ pub struct Response {
 #[derive(Deserialize)]
 /// Data structure containing infomation about a particular release
 /// 
-/// [https://research.stlouisfed.org/docs/api/fred/categories.html](https://research.stlouisfed.org/docs/api/fred/categories.html)
+/// [https://research.stlouisfed.org/docs/api/fred/release.html](https://research.stlouisfed.org/docs/api/fred/release.html)
 pub struct Release {
     /// The category ID number
     pub id: usize,
@@ -214,6 +224,8 @@ pub struct Release {
     pub press_release: bool,
     /// A link to the press release if there was one
     pub link: Option<String>,
+    /// Addition notes about the release
+    pub notes: Option<String>
 }
 
 pub struct Builder {

@@ -208,6 +208,8 @@ pub struct Category {
     pub name: String,
     /// A link to the source's website
     pub parent_id: usize,
+    /// Additional information about the category
+    pub notes: Option<String>,
 }
 
 #[cfg(test)]

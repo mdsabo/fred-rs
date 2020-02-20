@@ -31,7 +31,7 @@ pub struct ReleaseDate {
     /// The category ID number
     pub release_id: usize,
     /// The name of the release
-    pub release_name: String,
+    pub release_name: Option<String>,
     /// The date of the release
     pub date: String,
 }
@@ -211,7 +211,7 @@ mod tests {
         };
 
         for item in resp.release_dates {
-            println!("{}: {} -> {}", item.date, item.release_id, item.release_name);
+            println!("{}: {} -> {}", item.date, item.release_id, item.release_name.unwrap());
         }
     } 
 }

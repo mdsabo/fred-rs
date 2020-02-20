@@ -1,46 +1,3 @@
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/category/tags endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html] (https://research.stlouisfed.org/docs/api/fred/category_tags.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// How the results are ordered
-    pub order_by: String,
-    // Results are listed in ascending or descending
-    pub sort_order: String,
-    /// Number of results returned
-    pub count: usize,
-    /// ???
-    pub offset: usize,
-    /// Maximum number of results to return
-    pub limit: usize,
-    /// Series returned by the search
-    pub tags: Vec<Tag>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html](https://research.stlouisfed.org/docs/api/fred/category_tags.html)
-pub struct Tag {
-    /// The tag name
-    pub name: String,
-    /// The group ID string
-    pub group_id: String,
-    /// Additonal information about the tag (e.g. authors or sources)
-    pub notes: Option<String>,
-    /// Date and time the tag was created
-    pub created: String,
-    /// Popularity score
-    pub popularity: usize,
-    /// Number of series with the tag
-    pub series_count: usize,
-}
 
 /// Determines the order of search results
 /// 
@@ -258,6 +215,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tags::Response;
     use crate::client::FredClient;
 
     #[test]

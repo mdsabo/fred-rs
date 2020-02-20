@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::series::Series;
+
 #[derive(Deserialize)]
 /// Response data structure for the fred/series/search/related_tags endpoint
 /// 
@@ -25,41 +27,6 @@ pub struct Response {
     pub limit: usize,
     /// Series returned by the search
     pub seriess: Vec<Series>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_updates.html](https://research.stlouisfed.org/docs/api/fred/series_updates.html)
-pub struct Series {
-    /// The series ID name
-    pub id: String,
-    /// The Real Time start of the series
-    pub realtime_start: String,
-    /// The Real Time end of the series
-    pub realtime_end: String,
-    /// The series title
-    pub title: String,
-    /// The series start date
-    pub observation_start: String,
-    /// The series end date
-    pub observation_end: String,
-    /// The series natural frequency (See [series::observation::Frequency])
-    pub frequency: String,
-    /// Short form of the frequency
-    pub frequency_short: String,
-    /// The data series units (e.g. Billions of Chanined 2009 Dollars)
-    pub units: String,
-    // Short form of the units (e.g. Bil. of Chn. 2009 $)
-    pub units_short: String,
-    /// Seasonal Adjustment Information
-    pub seasonal_adjustment: String,
-    /// Short form of the Seasonal Adjustment Info
-    pub seasonal_adjustment_short: String,
-    /// Date on whih the series was last updated
-    pub last_updated: String,
-    /// Popularity score
-    pub popularity: isize,
 }
 
 /// Used to filter series included in the results

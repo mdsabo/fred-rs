@@ -1,36 +1,3 @@
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/series/release endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_release.html] (https://research.stlouisfed.org/docs/api/fred/series_release.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// List of releases related to the specified series_id
-    pub releases: Vec<Release>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular release
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_categories.html](https://research.stlouisfed.org/docs/api/fred/series_categories.html)
-pub struct Release {
-    /// The category ID number
-    pub id: usize,
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// The releaase name
-    pub name: String,
-    /// Indicates if there was a press release
-    pub press_release: bool,
-    /// A link to the press release if there was one
-    pub link: Option<String>,
-}
 
 pub struct Builder {
     option_string: String
@@ -84,6 +51,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::release::Response;
     use crate::client::FredClient;
 
     #[test]

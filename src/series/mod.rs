@@ -268,12 +268,24 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 /// Response data structure for the fred/series endpoint
 /// 
+/// Order_by, sort_order, count, offset and limit are used by endpoints which return a list of series.  They can be ignored for the fred/series endpoint.
+/// 
 /// [https://research.stlouisfed.org/docs/api/fred/series.html] (https://research.stlouisfed.org/docs/api/fred/series.html)
 pub struct Response {
     /// The Real Time start date for the request
     pub realtime_start: String,
     /// The Real Time end data for the request
     pub realtime_end: String,
+    /// How the results are ordered
+    pub order_by: Option<String>,
+    /// Results can be ascending (asc) or descending (desc)
+    pub sort_order: Option<String>,
+    /// Number of results returned
+    pub count: Option<usize>,
+    /// ???
+    pub offset: Option<usize>,
+    /// Maximum number of results to return
+    pub limit: Option<usize>,
     /// Series matching the requested series_id
     /// 
     /// The fred/series endpoint will return a series for each time a series changed.  For example Real GNP has been calculated several different ways over time so this endpoint will return a different series for each time period becasue they all fit under the same symbol: GNPCA.
@@ -313,6 +325,8 @@ pub struct Series {
     pub last_updated: String,
     /// Popularity score
     pub popularity: isize,
+    /// Group popularity score
+    pub group_popularity: Option<isize>,
     /// Additional Notes
     pub notes: Option<String>,
 }

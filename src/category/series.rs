@@ -1,66 +1,3 @@
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/series endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_series.html] (https://research.stlouisfed.org/docs/api/fred/category_series.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// How the results are ordered
-    pub order_by: String,
-    /// Results can be ascending (asc) or descending (desc)
-    pub sort_order: String,
-    /// Number of results returned
-    pub count: usize,
-    /// ???
-    pub offset: usize,
-    /// Maximum number of results to return
-    pub limit: usize,
-    /// Series returned by the search
-    pub seriess: Vec<Series>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_series.html](https://research.stlouisfed.org/docs/api/fred/category_series.html)
-pub struct Series {
-    /// The series ID name
-    pub id: String,
-    /// The Real Time start of the series
-    pub realtime_start: String,
-    /// The Real Time end of the series
-    pub realtime_end: String,
-    /// The series title
-    pub title: String,
-    /// The series start date
-    pub observation_start: String,
-    /// The series end date
-    pub observation_end: String,
-    /// The series natural frequency (See [series::observation::Frequency])
-    pub frequency: String,
-    /// Short form of the frequency
-    pub frequency_short: String,
-    /// The data series units (e.g. Billions of Chanined 2009 Dollars)
-    pub units: String,
-    // Short form of the units (e.g. Bil. of Chn. 2009 $)
-    pub units_short: String,
-    /// Seasonal Adjustment Information
-    pub seasonal_adjustment: String,
-    /// Short form of the Seasonal Adjustment Info
-    pub seasonal_adjustment_short: String,
-    /// Date on whih the series was last updated
-    pub last_updated: String,
-    /// Popularity score
-    pub popularity: isize,
-    /// Popularity score within the series group
-    pub group_popularity: isize,
-    /// Additional Notes
-    pub notes: Option<String>,
-}
 
 /// Determines the order of search results
 /// 
@@ -312,6 +249,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::series::Response;
     use crate::client::FredClient;
 
     #[test]

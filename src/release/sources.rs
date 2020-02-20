@@ -1,34 +1,3 @@
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/release/sources endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_sources.html] (https://research.stlouisfed.org/docs/api/fred/release_sources.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// Series returned by the search
-    pub sources: Vec<Source>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_sources.html](https://research.stlouisfed.org/docs/api/fred/release_sources.html)
-pub struct Source {
-    /// The source ID
-    pub id: usize,
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// The source name
-    pub name: String,
-    /// A link to the source's website
-    pub link: Option<String>,
-}
 
 pub struct Builder {
     option_string: String
@@ -82,6 +51,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::source::Response;
     use crate::client::FredClient;
 
     #[test]

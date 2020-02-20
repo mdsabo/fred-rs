@@ -1,28 +1,4 @@
 
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/category endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_children.html] (https://research.stlouisfed.org/docs/api/fred/category_children.html)
-pub struct Response {
-    /// Series returned by the search
-    pub categories: Vec<Category>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/category_children.html](https://research.stlouisfed.org/docs/api/fred/category_children.html)
-pub struct Category {
-    /// The source ID
-    pub id: usize,
-    /// The source name
-    pub name: String,
-    /// A link to the source's website
-    pub parent_id: usize,
-}
-
 pub struct Builder {
     option_string: String,
 }
@@ -74,7 +50,7 @@ impl Builder {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::category::Response;
     use crate::client::FredClient;
 
     #[test]

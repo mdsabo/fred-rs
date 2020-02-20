@@ -1,44 +1,3 @@
-use serde::Deserialize;
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/sources endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/sources.html] (https://research.stlouisfed.org/docs/api/fred/sources.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// How the results are ordered
-    pub order_by: String,
-    // Results are listed in ascending or descending
-    pub sort_order: String,
-    /// Number of results returned
-    pub count: usize,
-    /// ???
-    pub offset: usize,
-    /// Maximum number of results to return
-    pub limit: usize,
-    /// Series returned by the search
-    pub sources: Vec<Source>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/sources.html](https://research.stlouisfed.org/docs/api/fred/sources.html)
-pub struct Source {
-    /// The source ID
-    pub id: usize,
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// The source name
-    pub name: String,
-    /// A link to the source's website
-    pub link: Option<String>,
-}
 
 /// Determines the order of search results
 /// 
@@ -179,6 +138,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::source::Response;
     use crate::client::FredClient;
 
     #[test]

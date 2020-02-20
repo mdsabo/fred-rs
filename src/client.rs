@@ -105,7 +105,7 @@ impl FredClient {
         &mut self,
         series_id: &str,
         builder: Option<series::categories::Builder>
-    ) -> Result<series::categories::Response, String> {
+    ) -> Result<category::Response, String> {
         let mut url: String = format!(
             "{}series/categories?series_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -161,7 +161,7 @@ impl FredClient {
         &mut self,
         series_id: &str,
         builder: Option<series::release::Builder>
-    ) -> Result<series::release::Response, String> {
+    ) -> Result<release::Response, String> {
         let mut url: String = format!(
             "{}series/release?series_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -189,7 +189,7 @@ impl FredClient {
         &mut self,
         series_id: &str,
         builder: Option<series::tags::Builder>
-    ) -> Result<series::tags::Response, String> {
+    ) -> Result<tags::Response, String> {
 
         let mut url: String = format!(
             "{}series/tags?series_id={}&api_key={}&file_type=json",
@@ -395,7 +395,7 @@ impl FredClient {
     pub fn tags_series(
         &mut self,
         builder: tags::series::Builder
-    ) -> Result<tags::series::Response, String> {
+    ) -> Result<series::Response, String> {
         let mut url: String = format!(
             "{}tags/series?api_key={}&file_type=json",
             self.url_base,
@@ -424,7 +424,7 @@ impl FredClient {
     pub fn related_tags(
         &mut self,
         builder: related_tags::Builder
-    ) -> Result<related_tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let mut url: String = format!(
             "{}related_tags?api_key={}&file_type=json",
             self.url_base,
@@ -453,7 +453,7 @@ impl FredClient {
     pub fn sources(
         &mut self,
         builder: Option<sources::Builder>
-    ) -> Result<sources::Response, String> {
+    ) -> Result<source::Response, String> {
         let mut url: String = format!(
             "{}sources?api_key={}&file_type=json",
             self.url_base,
@@ -511,7 +511,7 @@ impl FredClient {
         &mut self,
         source_id: usize,
         builder: Option<source::releases::Builder>
-    ) -> Result<source::releases::Response, String> {
+    ) -> Result<release::Response, String> {
         let mut url: String = format!(
             "{}source/releases?source_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -563,7 +563,7 @@ impl FredClient {
     pub fn category_children(
         &mut self,
         category_id: usize
-    ) -> Result<category::children::Response, String> {
+    ) -> Result<category::Response, String> {
         let url: String = format!(
             "{}category/children?category_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -585,7 +585,7 @@ impl FredClient {
     pub fn category_related(
         &mut self,
         category_id: usize
-    ) -> Result<category::related::Response, String> {
+    ) -> Result<category::Response, String> {
         let url: String = format!(
             "{}category/related?category_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -608,7 +608,7 @@ impl FredClient {
         &mut self,
         category_id: usize,
         builder: Option<category::series::Builder>
-    ) -> Result<category::series::Response, String> {
+    ) -> Result<series::Response, String> {
         let mut url: String = format!(
             "{}category/series?category_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -636,7 +636,7 @@ impl FredClient {
         &mut self,
         category_id: usize,
         builder: Option<category::tags::Builder>
-    ) -> Result<category::tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let mut url: String = format!(
             "{}category/tags?category_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -666,7 +666,7 @@ impl FredClient {
         &mut self,
         category_id: usize,
         builder: category::related_tags::Builder
-    ) -> Result<category::related_tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let mut url: String = format!(
             "{}category/related_tags?category_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -698,7 +698,7 @@ impl FredClient {
     pub fn releases(
         &mut self,
         builder: Option<releases::Builder>
-    ) -> Result<releases::Response, String> {
+    ) -> Result<release::Response, String> {
         let mut url: String = format!(
             "{}releases?api_key={}&file_type=json",
             self.url_base,
@@ -782,7 +782,7 @@ impl FredClient {
         &mut self,
         release_id: usize,
         builder: Option<release::series::Builder>
-    ) -> Result<release::series::Response, String> {
+    ) -> Result<series::Response, String> {
         let mut url: String = format!(
             "{}release/series?release_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -810,7 +810,7 @@ impl FredClient {
         &mut self,
         release_id: usize,
         builder: Option<release::sources::Builder>
-    ) -> Result<release::sources::Response, String> {
+    ) -> Result<source::Response, String> {
         let mut url: String = format!(
             "{}release/sources?release_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -838,7 +838,7 @@ impl FredClient {
         &mut self,
         release_id: usize,
         builder: Option<release::tags::Builder>
-    ) -> Result<release::tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let mut url: String = format!(
             "{}release/tags?release_id={}&api_key={}&file_type=json",
             self.url_base,
@@ -866,7 +866,7 @@ impl FredClient {
         &mut self,
         release_id: usize,
         builder: release::related_tags::Builder
-    ) -> Result<release::related_tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let mut url: String = format!(
             "{}release/related_tags?release_id={}&api_key={}&file_type=json",
             self.url_base,
