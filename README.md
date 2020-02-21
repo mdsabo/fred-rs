@@ -108,7 +108,7 @@ client.with_key("abcdefghijklmnopqrstuvwxyz123456");
 
 ## Issues/Bugs/Improvments
 If you discover any issues or bugs or want to suggest any improvements, feel free 
-to open a GitHub issue or email me directly at [matthewdsabo@gmail.com](mailto: matthewdsabo@gmail.com).
+to open a GitHub issue or email me directly at matthewdsabo@gmail.com.
 
 <br>
 
