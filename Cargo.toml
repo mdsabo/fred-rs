@@ -11,7 +11,7 @@ include = ["Cargo.toml", "src/**/*.rs", "README.md", "README", "LICENSE-MIT", "L
 edition = "2018"
 
 keywords = ["finance", "economics", "fred"]
-categories = ["API bindings"]
+categories = ["api-bindings"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
