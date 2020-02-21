@@ -9,6 +9,9 @@ readme = "README.md"
 include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-MIT", "LICENSE-APACHE"]
 edition = "2018"
 
+keywords = ["finance", "economics", "fred"]
+categories = ["API bindings"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
