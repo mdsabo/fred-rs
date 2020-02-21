@@ -49,6 +49,15 @@ let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
 };
 ```
 
+All endpoints use the builder approach to construct the API URL.  Each builder 
+method corresponds to a paramter that can be added to the API request.  
+In the example above, three parameters are added to the request, observation_start, units and frequency.
+The [FRED API Documentation](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) 
+explains the possible parameters for each endpoint.  Required paramters (except the `tag_names` paramter) are
+passed to the client function itself.  In the example, series_id is a required paramter and is passed 
+directly to the client function as `"GNCPA"`.  The `tag_names` parameter available on some endpoints 
+accepts a list of arguments, so it is easier to pass this argument to the builder.
+
 ## API Key
 Developers need to request an API Key in order to access FRED.  This can be done at [https://research.stlouisfed.org/docs/api/api_key.html](https://research.stlouisfed.org/docs/api/api_key.html).
 
