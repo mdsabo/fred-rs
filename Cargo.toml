@@ -1,9 +1,13 @@
 [package]
 name = "fred-rs"
 version = "0.1.0"
-authors = ["Matthew Sabo"]
-edition = "2018"
+authors = ["Matthew Sabo <matthewdsabo@gmail.com>"]
 license = "MIT"
+description = "An interface for accessing the St. Louis Fed's FRED API"
+repository = "https://github.com/mdsabo/fred-rs"
+readme = "README.md"
+include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-MIT"]
+edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
