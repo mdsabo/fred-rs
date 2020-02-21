@@ -83,7 +83,7 @@ In the example above, three parameters are added to the request, observation_sta
 The [FRED API Documentation](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) 
 explains the possible parameters for each endpoint.  Required paramters (except the `tag_names` paramter) are
 passed to the client function itself.  In the example, series_id is a required paramter and is passed 
-directly to the client function as `"GNCPA"`.  The `tag_names` parameter available on some endpoints 
+directly to the client function as `"GNPCA"`.  The `tag_names` parameter available on some endpoints 
 accepts a list of arguments, so it is easier to pass this argument to the builder.
 
 ## API Key
@@ -116,5 +116,5 @@ to open a GitHub issue or email me directly at matthewdsabo@gmail.com.
 #### License
 
 <sup>
-Licensed under <a href="LICENSE-MIT">MIT license</a>.
+Licensed under [MIT LICENSE](README/LICENSE)</a>.
 </sup>
