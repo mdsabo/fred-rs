@@ -1,3 +1,37 @@
+//! Get the release tables for a given release
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/release_tables.html](https://research.stlouisfed.org/docs/api/fred/release_tables.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::release::tables::{Builder, Response};
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .include_observation_values();
+//! 
+//! let resp: Response = match c.release_tables(9, Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for (key, value) in resp.elements {
+//!     println!("{}: {}", key, value.name);
+//! }
+//! ```
 
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -68,7 +102,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

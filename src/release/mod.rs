@@ -1,198 +1,42 @@
+//! Get a release of economic data
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/release.html](https://research.stlouisfed.org/docs/api/fred/release.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::release::{Builder, Response};
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .realtime_start("2000-01-01");
+//! 
+//! let resp: Response = match c.release(9, Some(builder)) {
+//! Ok(resp) => resp,
+//! Err(msg) => {
+//!     println!("{}", msg);
+//!     assert_eq!(2, 1);
+//!     return
+//!     },
+//! };
+//! 
+//! for item in resp.releases {
+//!     println!("{}: {}", item.id, item.name);
+//! }
+//! ```
 
-/// Get the series on a release of economic data
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_series.html](https://research.stlouisfed.org/docs/api/fred/release_series.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::release::series::{Builder, OrderBy, SortOrder};
-/// use fred_rs::series::Response;
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Frequency);
-/// 
-/// let resp: Response = match c.release_series(9, Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.seriess {
-///     println!(
-///         "{}: {} {}",
-///         item.id,
-///         item.title,
-///         item.frequency,
-///     );
-/// }
-/// ```
 pub mod series;
-
-/// Get the sources for a release of economic data
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_sources.html](https://research.stlouisfed.org/docs/api/fred/release_sources.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::release::sources::Builder;
-/// use fred_rs::source::Response;
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .realtime_start("2000-01-01");
-/// 
-/// let resp: Response = match c.release_sources(9, Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.sources {
-///     println!("{}: {}", item.id, item.name);
-/// }
-/// ```
 pub mod sources;
-
-/// Get the tags for a release
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html](https://research.stlouisfed.org/docs/api/fred/release_tags.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::release::tags::{Builder, OrderBy, SortOrder};
-/// use fred_rs::tags::Response;
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Created);
-/// 
-/// let resp: Response = match c.release_tags(9, Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!("{}: {}", item.name, item.created);
-/// }
-/// ```
 pub mod tags;
-
-/// Get the related tags for a release
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_related_tags.html](https://research.stlouisfed.org/docs/api/fred/release_related_tags.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::release::related_tags::{Builder, OrderBy, SortOrder};
-/// use fred_rs::tags::Response;
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .tag_name("usa")
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Created);
-/// 
-/// let resp: Response = match c.release_related_tags(9, builder) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!("{}: {}", item.name, item.created);
-/// }
-/// ```
 pub mod related_tags;
-
-/// Get the release tables for a given release
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/release_tables.html](https://research.stlouisfed.org/docs/api/fred/release_tables.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::release::tables::{Builder, Response};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .include_observation_values();
-/// 
-/// let resp: Response = match c.release_tables(9, Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for (key, value) in resp.elements {
-///     println!("{}: {}", key, value.name);
-/// }
-/// ```
 pub mod tables;
 
 // -----------------------------------------------------------------------------
@@ -268,7 +112,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

@@ -1,3 +1,38 @@
+/// Get the sources for a release of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_sources.html](https://research.stlouisfed.org/docs/api/fred/release_sources.html)
+/// 
+/// ```
+/// use fred_rs::client::FredClient;
+/// use fred_rs::release::sources::Builder;
+/// use fred_rs::source::Response;
+/// 
+/// let mut c = match FredClient::new() {
+/// Ok(c) => c,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// let mut builder = Builder::new();
+/// builder
+///     .realtime_start("2000-01-01");
+/// 
+/// let resp: Response = match c.release_sources(9, Some(builder)) {
+///     Ok(resp) => resp,
+///     Err(msg) => {
+///         println!("{}", msg);
+///         assert_eq!(2, 1);
+///         return
+///     },
+/// };
+/// 
+/// for item in resp.sources {
+///     println!("{}: {}", item.id, item.name);
+/// }
+/// ```
 
 pub struct Builder {
     option_string: String
@@ -25,7 +60,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

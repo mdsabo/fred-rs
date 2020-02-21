@@ -1,3 +1,38 @@
+//! Get the dates in history when a series' data values were revised or new data values were released
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html](https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::vintagedates::{Builder, Response, SortOrder};
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .sort_order(SortOrder::Descending)
+//!     .limit(5);
+//! 
+//! let resp: Response = match c.series_vintagedates("GNPCA", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.vintage_dates {
+//!     println!("{}", item);
+//! }
+//! ```
 
 use serde::Deserialize;
 

@@ -1,3 +1,36 @@
+//! Get release dates for all releases of economic data
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/releases_dates.html](https://research.stlouisfed.org/docs/api/fred/releases_dates.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::releases::dates::{Builder, Response, OrderBy, SortOrder};
+//! 
+//! // Create the client object
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! 
+//! // Create the argument builder
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5)
+//!     .sort_order(SortOrder::Ascending)
+//!     .order_by(OrderBy::ReleaseId);
+//! 
+//! // Make the request and pass in the builder to apply the arguments
+//! let resp: Response = match c.releases_dates(Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! ```
 
 use serde::Deserialize;
 
@@ -83,7 +116,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

@@ -1,44 +1,37 @@
+//! Get a source of economic data
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/source.html](https://research.stlouisfed.org/docs/api/fred/source.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::source::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let resp: Response = match c.source(1, None) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.sources {
+//!     match item.link {
+//!         Some(l) => println!("{}: {}", item.name, l),
+//!         None => println!("{}: null", item.name),
+//!     }
+//! }
+//! ```
 
-/// Get the releases for a source
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/source_releases.html](https://research.stlouisfed.org/docs/api/fred/source_releases.html
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::source::releases::{Builder, SortOrder, OrderBy};
-/// use fred_rs::release::Response;
-/// 
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .order_by(OrderBy::Name)
-///     .sort_order(SortOrder::Descending);
-/// 
-/// let resp: Response = match c.source_releases(1, Some(builder)) {
-///     Ok(resp) => resp,
-///         Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.releases {
-///     match item.link {
-///         Some(l) => println!("{}: {}", item.name, l),
-///         None => println!("{}: No Link", item.name),
-///     }
-/// }
-/// ```
 pub mod releases;
 
 // -----------------------------------------------------------------------------
@@ -113,7 +106,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

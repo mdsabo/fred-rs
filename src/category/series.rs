@@ -1,3 +1,45 @@
+//! Get the series in a category
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/category_series.html](https://research.stlouisfed.org/docs/api/fred/category_series.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::category::series::{Builder, OrderBy, SortOrder};
+//! use fred_rs::series::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Frequency);
+//! 
+//! let resp: Response = match c.category_series(125, Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.seriess {
+//!     println!(
+//!         "{}: {} {}",
+//!         item.id,
+//!         item.title,
+//!         item.popularity,
+//!     );
+//! }
+//! ```
 
 /// Determines the order of search results
 /// 
@@ -69,7 +111,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
+    pub(crate) fn build(mut self) -> String {
         if self.include_tags.len() > 0 {
             self.option_string += format!("&tag_names={}", self.include_tags).as_str()
         }

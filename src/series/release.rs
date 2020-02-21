@@ -1,3 +1,38 @@
+//! Get the release for an economic data series
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series_release.html](https://research.stlouisfed.org/docs/api/fred/series_release.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::categories::Builder;
+//! use fred_rs::category::Response;
+//! 
+//! // Create the client object
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! 
+//! // Create the argument builder
+//! let mut builder = Builder::new();
+//! 
+//! // Set the arguments for the builder
+//! builder
+//!     .realtime_start("2000-01-01")
+//!     .realtime_end("2020-01-01");
+//! 
+//! // Make the request and pass in the builder to apply the arguments
+//! let resp: Response = match c.series_categories("EXJPUS", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! ```
 
 pub struct Builder {
     option_string: String
@@ -25,7 +60,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

@@ -1,3 +1,42 @@
+//! Get all sources of economic data
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/sources.html](https://research.stlouisfed.org/docs/api/fred/sources.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::sources::{Builder, SortOrder};
+//! use fred_rs::source::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending);
+//! 
+//! let resp: Response = match c.sources(Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.sources {
+//!     match item.link {
+//!         Some(l) => println!("{}: {}", item.name, l),
+//!         None => println!("{}: null", item.name),
+//!     }
+//! }
+//! ```
 
 /// Determines the order of search results
 /// 
@@ -46,7 +85,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

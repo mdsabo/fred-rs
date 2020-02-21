@@ -1,3 +1,44 @@
+//! Get the tags for a series search.
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series_search_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::search::tags::{Builder, OrderBy, SortOrder};
+//! use fred_rs::tags::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Popularity);
+//! 
+//! let resp: Response = match c.series_search_tags("monetary service index", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.tags {
+//!     println!(
+//!         "{}: {}",
+//!         item.name,
+//!         item.popularity,
+//!     );
+//! }
+//! ```
 
 /// Determines the order of search results
 /// 
@@ -62,7 +103,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
+    pub(crate) fn build(mut self) -> String {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
         }

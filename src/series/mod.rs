@@ -1,277 +1,49 @@
+//! Get an economic data series
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series.html](https://research.stlouisfed.org/docs/api/fred/series.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::{Builder, Response};
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder.realtime_start("2000-01-01");
+//! 
+//! let resp: Response = match c.series("UNRATE", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.seriess {
+//!     println!(
+//!         "{}: {} {} {}",
+//!         item.id,
+//!         item.title,
+//!         item.realtime_start,
+//!         item.realtime_end
+//!     );
+//! }
+//! ```
 
-/// Get the categories for an economic data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_categories.html](https://research.stlouisfed.org/docs/api/fred/series_categories.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::categories::Builder;
-/// use fred_rs::category::Response;
-/// 
-/// // Create the client object
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// 
-/// // Create the argument builder
-/// let mut builder = Builder::new();
-/// 
-/// // Set the arguments for the builder
-/// builder
-///     .realtime_start("2000-01-01")
-///     .realtime_end("2020-01-01");
-/// 
-/// // Make the request and pass in the builder to apply the arguments
-/// let resp: Response = match c.series_categories("EXJPUS", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// ```
 pub mod categories;
-
-/// Get the observations or data values for an economic data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::observation::{Builder, Units, Frequency, Response};
-/// 
-/// // Create the client object
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// 
-/// // Create the argument builder
-/// let mut builder = Builder::new();
-/// 
-/// // Set the arguments for the builder
-/// builder
-///     .observation_start("2000-01-01")
-///     .units(Units::PCH)
-///     .frequency(Frequency::M);
-/// 
-/// // Make the request and pass in the builder to apply the arguments
-/// let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// ```
 pub mod observation;
-
-/// Get the release for an economic data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_release.html](https://research.stlouisfed.org/docs/api/fred/series_release.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::categories::Builder;
-/// use fred_rs::category::Response;
-/// 
-/// // Create the client object
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// 
-/// // Create the argument builder
-/// let mut builder = Builder::new();
-/// 
-/// // Set the arguments for the builder
-/// builder
-///     .realtime_start("2000-01-01")
-///     .realtime_end("2020-01-01");
-/// 
-/// // Make the request and pass in the builder to apply the arguments
-/// let resp: Response = match c.series_categories("EXJPUS", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         return
-///     },
-/// };
-/// ```
 pub mod release;
-
-/// Get the tags for an economic data series
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_tags.html](https://research.stlouisfed.org/docs/api/fred/series_tags.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::tags::{Builder, SortOrder, OrderBy};
-/// use fred_rs::tags::Response;
-/// 
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Popularity);
-/// 
-/// let resp: Response = match c.series_tags("STLFSI", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.tags {
-///     println!(
-///         "{}: {}",
-///         item.name,
-///         item.popularity,
-///     );
-/// }
-/// ```
 pub mod tags;
-
-/// Get economic data series that match keywords
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search.html](https://research.stlouisfed.org/docs/api/fred/series_search.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::{Builder, OrderBy, SortOrder};
-/// use fred_rs::series::Response;
-/// 
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5)
-///     .sort_order(SortOrder::Descending)
-///     .order_by(OrderBy::Frequency);
-/// 
-/// let resp: Response = match c.series_search("monetary index", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.seriess {
-///     println!(
-///         "{}: {} {}",
-///         item.id,
-///         item.title,
-///         item.frequency,
-///     );
-/// }
-/// ```
 pub mod search;
-
-/// Get economic data series sorted by when observations were updated on the FRED® server
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_updates.html](https://research.stlouisfed.org/docs/api/fred/series_updates.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::updates::{Builder, Response};
-/// 
-/// let mut c = match FredClient::new() {
-///     Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .limit(5);
-/// 
-/// let resp: Response = match c.series_updates(Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.seriess {
-///     println!(
-///         "{}: {} {}",
-///         item.title,
-///         item.id,
-///         item.popularity,
-///     );
-/// }
-/// ```
 pub mod updates;
-
-/// Get the dates in history when a series' data values were revised or new data values were released
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html](https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html)
-/// 
-/// ```
-/// use fred_rs::client::FredClient;
-/// use fred_rs::series::vintagedates::{Builder, Response, SortOrder};
-/// 
-/// let mut c = match FredClient::new() {
-/// Ok(c) => c,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// let mut builder = Builder::new();
-/// builder
-///     .sort_order(SortOrder::Descending)
-///     .limit(5);
-/// 
-/// let resp: Response = match c.series_vintagedates("GNPCA", Some(builder)) {
-///     Ok(resp) => resp,
-///     Err(msg) => {
-///         println!("{}", msg);
-///         assert_eq!(2, 1);
-///         return
-///     },
-/// };
-/// 
-/// for item in resp.vintage_dates {
-///     println!("{}", item);
-/// }
-/// ```
 pub mod vintagedates;
 
 // ----------------------------------------------------------------------------

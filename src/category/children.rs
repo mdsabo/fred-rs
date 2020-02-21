@@ -1,3 +1,34 @@
+//! Get the child categories for a specified parent category
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/category_children.html](https://research.stlouisfed.org/docs/api/fred/category_children.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::category::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let resp: Response = match c.category_children(125, None) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for s in resp.categories {
+//!     println!("ID: {}  Name: {}  ParentID: {}", s.id, s.name, s.parent_id);
+//! }
+//! ```
+
 
 pub struct Builder {
     option_string: String,
@@ -25,7 +56,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 
@@ -68,7 +99,7 @@ mod tests {
             },
         };
 
-        let resp: Response = match c.category_children(125) {
+        let resp: Response = match c.category_children(125, None) {
             Ok(resp) => resp,
             Err(msg) => {
                 println!("{}", msg);

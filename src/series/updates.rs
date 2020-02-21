@@ -1,3 +1,42 @@
+//! Get economic data series sorted by when observations were updated on the FRED® server
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series_updates.html](https://research.stlouisfed.org/docs/api/fred/series_updates.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::updates::{Builder, Response};
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5);
+//! 
+//! let resp: Response = match c.series_updates(Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.seriess {
+//!     println!(
+//!         "{}: {} {}",
+//!         item.title,
+//!         item.id,
+//!         item.popularity,
+//!     );
+//! }
+//! ```
 
 use serde::Deserialize;
 
@@ -69,8 +108,8 @@ impl Builder {
 
     /// Returns the current arguments as a URL formatted string
     /// 
-    /// Returns Err if there are not tag names specified using tag_name().
-    pub fn options(self) -> String {
+    /// Returns Err if there are no tag names specified using tag_name().
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 

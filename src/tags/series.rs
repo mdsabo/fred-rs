@@ -1,5 +1,47 @@
+//! Get the series matching tags
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/tags_series.html](https://research.stlouisfed.org/docs/api/fred/tags_series.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::tags::series::{Builder, SortOrder, OrderBy};
+//! use fred_rs::series::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .tag_name("usa")
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Popularity);
+//! 
+//! let resp: Response = match c.tags_series(builder) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.seriess {
+//!     println!(
+//!         "{}: {}",
+//!         item.id,
+//!         item.title
+//!     );
+//! }
+//! ```
 
-const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
+use crate::error::TAG_NAME_REQUIRED_ERROR_TEXT;
 
 /// Determines the type of search to perform
 /// 
@@ -82,7 +124,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> Result<String, String> {
+    pub(crate) fn build(mut self) -> Result<String, String> {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
         } else {

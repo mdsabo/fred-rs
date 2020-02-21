@@ -1,3 +1,36 @@
+//! Functions and definitons related to the persistent client
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::observation::{Builder, Units, Frequency, Response};
+//! 
+//! // Create the client object
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! 
+//! // Create the argument builder
+//! let mut builder = Builder::new();
+//! 
+//! // Set the arguments for the builder
+//! builder
+//!     .observation_start("2000-01-01")
+//!     .units(Units::PCH)
+//!     .frequency(Frequency::M);
+//! 
+//! // Make the request and pass in the builder to apply the arguments
+//! let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         return
+//!     },
+//! };
+//! ```
 
 use reqwest::blocking::{Client, Response};
 
@@ -160,7 +193,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -206,7 +239,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -252,7 +285,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -299,7 +332,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
         
@@ -341,7 +374,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
         
@@ -487,7 +520,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
         
@@ -535,7 +568,7 @@ impl FredClient {
             self.api_key
         );
 
-        match builder.options() {
+        match builder.build() {
             Ok(s) => url.push_str(s.as_str()),
             Err(msg) => return Err(msg),
         }
@@ -580,7 +613,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -620,7 +653,7 @@ impl FredClient {
             self.api_key
         );
 
-        match builder.options() {
+        match builder.build() {
             Ok(opt) => url.push_str(opt.as_str()),
             Err(msg) => return Err(msg),
         }
@@ -664,7 +697,7 @@ impl FredClient {
             self.api_key
         );
 
-        match builder.options() {
+        match builder.build() {
             Ok(opt) => url.push_str(opt.as_str()),
             Err(msg) => return Err(msg),
         }
@@ -709,7 +742,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -758,7 +791,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -804,7 +837,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -882,14 +915,20 @@ impl FredClient {
     /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_children.html#category_id)
     pub fn category_children(
         &mut self,
-        category_id: usize
+        category_id: usize,
+        builder: Option<category::children::Builder>,
     ) -> Result<category::Response, String> {
-        let url: String = format!(
+        let mut url: String = format!(
             "{}category/children?category_id={}&api_key={}&file_type=json",
             self.url_base,
             category_id,
             self.api_key
         );
+
+        match builder {
+            Some(b) => url.push_str(b.build().as_str()),
+            None => (),
+        }
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
@@ -922,14 +961,20 @@ impl FredClient {
     /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_related.html#category_id)
     pub fn category_related(
         &mut self,
-        category_id: usize
+        category_id: usize,
+        builder: Option<category::related::Builder>,
     ) -> Result<category::Response, String> {
-        let url: String = format!(
+        let mut url: String = format!(
             "{}category/related?category_id={}&api_key={}&file_type=json",
             self.url_base,
             category_id,
             self.api_key
         );
+
+        match builder {
+            Some(b) => url.push_str(b.build().as_str()),
+            None => (),
+        }
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {
@@ -973,7 +1018,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1019,7 +1064,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1064,7 +1109,7 @@ impl FredClient {
             self.api_key
         );
 
-        match builder.options() {
+        match builder.build() {
             Ok(o) => url.push_str(o.as_str()),
             Err(msg) => return Err(msg),
         }
@@ -1109,7 +1154,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1150,7 +1195,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1199,7 +1244,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1245,7 +1290,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1291,7 +1336,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1337,7 +1382,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -1382,7 +1427,7 @@ impl FredClient {
             self.api_key
         );
 
-        match builder.options() {
+        match builder.build() {
             Ok(o) => url.push_str(o.as_str()),
             Err(msg) => return Err(msg),
         }
@@ -1429,7 +1474,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
         

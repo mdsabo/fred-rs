@@ -1,3 +1,40 @@
+//! Get the tags for a release
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/release_tags.html](https://research.stlouisfed.org/docs/api/fred/release_tags.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::release::tags::{Builder, OrderBy, SortOrder};
+//! use fred_rs::tags::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//! Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Created);
+//! 
+//! let resp: Response = match c.release_tags(9, Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.tags {
+//!     println!("{}: {}", item.name, item.created);
+//! }
+//! ```
 
 /// Determines the order of search results
 /// 
@@ -62,7 +99,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
+    pub(crate) fn build(mut self) -> String {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
         }

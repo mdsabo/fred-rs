@@ -1,5 +1,48 @@
+//! Get the related tags for a category
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/category_related_tags.html](https://research.stlouisfed.org/docs/api/fred/category_related_tags.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::category::related_tags::{Builder, OrderBy, SortOrder};
+//! use fred_rs::tags::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .tag_name("usa")
+//!     .limit(5)
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Name);
+//! 
+//! let resp: Response = match c.category_related_tags(125, builder) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.tags {
+//!     println!(
+//!         "{}: {} {}",
+//!         item.name,
+//!         item.series_count,
+//!         item.popularity
+//!     );
+//! }
+//! ```
 
-const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
+use crate::error::TAG_NAME_REQUIRED_ERROR_TEXT;
 
 /// Determines the order of search results
 /// 
@@ -67,8 +110,8 @@ impl Builder {
 
     /// Returns the current arguments as a URL formatted string
     /// 
-    /// Returns Err if there are not tag names specified using tag_name().
-    pub fn options(mut self) -> Result<String, String> {
+    /// Returns Err if there are no tag names specified using tag_name().
+    pub(crate) fn build(mut self) -> Result<String, String> {
         if self.tag_names.len() > 0 {
             self.option_string += format!("&tag_names={}", self.tag_names).as_str()
         } else {

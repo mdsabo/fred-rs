@@ -1,3 +1,43 @@
+//! Get the tags for an economic data series
+//! 
+//! [https://research.stlouisfed.org/docs/api/fred/series_tags.html](https://research.stlouisfed.org/docs/api/fred/series_tags.html)
+//! 
+//! ```
+//! use fred_rs::client::FredClient;
+//! use fred_rs::series::tags::{Builder, SortOrder, OrderBy};
+//! use fred_rs::tags::Response;
+//! 
+//! let mut c = match FredClient::new() {
+//!     Ok(c) => c,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! let mut builder = Builder::new();
+//! builder
+//!     .sort_order(SortOrder::Descending)
+//!     .order_by(OrderBy::Popularity);
+//! 
+//! let resp: Response = match c.series_tags("STLFSI", Some(builder)) {
+//!     Ok(resp) => resp,
+//!     Err(msg) => {
+//!         println!("{}", msg);
+//!         assert_eq!(2, 1);
+//!         return
+//!     },
+//! };
+//! 
+//! for item in resp.tags {
+//!     println!(
+//!         "{}: {}",
+//!         item.name,
+//!         item.popularity,
+//!     );
+//! }
+//! ```
 
 /// Determines the order of search results
 /// 
@@ -47,7 +87,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 
