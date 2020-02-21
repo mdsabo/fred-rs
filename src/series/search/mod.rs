@@ -5,7 +5,8 @@
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::series::search::tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,
@@ -47,7 +48,8 @@ pub mod tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::related_tags::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::series::search::related_tags::{Builder, OrderBy, SortOrder};
+/// use fred_rs::tags::Response;
 /// 
 /// let mut c = match FredClient::new() {
 /// Ok(c) => c,

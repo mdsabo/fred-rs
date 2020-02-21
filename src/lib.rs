@@ -201,7 +201,10 @@ pub mod series;
 /// };
 /// 
 /// let mut builder = Builder::new();
-/// builder.realtime_start("2000-01-01");
+/// builder
+///     .sort_order(SortOrder::Descending)
+///     .order_by(OrderBy::Created)
+///     .limit(5);
 /// 
 /// let resp: Response = match c.tags(Some(builder)) {
 ///     Ok(resp) => resp,

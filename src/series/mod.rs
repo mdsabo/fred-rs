@@ -158,7 +158,8 @@ pub mod tags;
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
-/// use fred_rs::series::search::{Builder, Response, OrderBy, SortOrder};
+/// use fred_rs::series::search::{Builder, OrderBy, SortOrder};
+/// use fred_rs::series::Response;
 /// 
 /// let mut c = match FredClient::new() {
 ///     Ok(c) => c,

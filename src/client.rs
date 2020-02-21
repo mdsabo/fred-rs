@@ -1,5 +1,5 @@
 
-pub use reqwest::blocking::{Client, Response};
+use reqwest::blocking::{Client, Response};
 
 use std::time::Duration;
 use std::env;
@@ -22,12 +22,14 @@ impl FredClient {
 
     /// Creates and initializes a new client object
     /// 
+    /// The client will attempt to load an API key from the environment variable 'FRED_API_KEY'.  If this variable is undefined, the key remains empty.
+    /// 
     /// If a connection cannot be made to the FRED API, it returns Err containing an error message.
     /// 
     /// ```
     /// use fred_rs::client::FredClient;
     /// 
-    /// let mut c = match FredClient::new() {
+    /// let mut client = match FredClient::new() {
     ///     Ok(c) => c,
     ///     Err(msg) => {
     ///         println!("{}", msg);
@@ -44,7 +46,7 @@ impl FredClient {
 
         let api_key = match env::var(FRED_API_KEY) {
             Ok(val) => val,
-            Err(_) => return Err(String::from("FRED_API_KEY not found.")),
+            Err(_) => String::from(""),
         };
 
         let fred = FredClient {
@@ -63,6 +65,28 @@ impl FredClient {
 
     }
 
+    /// Sets the FRED API key for the client
+    /// 
+    /// # Arguments
+    /// * `key` - The [API key](https://research.stlouisfed.org/docs/api/api_key.html) generated to access FRED 
+    /// 
+    /// ```
+    /// use fred_rs::client::FredClient;
+    /// 
+    /// let mut client = match FredClient::new() {
+    ///     Ok(c) => c,
+    ///     Err(msg) => {
+    ///         println!("{}", msg);
+    ///         return
+    ///     },
+    /// };
+    /// 
+    /// client.with_key("abcdefghijklmnopqrstuvwxyz123456");
+    /// ```
+    pub fn with_key(&mut self, key: &str) {
+        self.api_key = String::from(key);
+    }
+
     fn get_request(&mut self, url: &str) -> Result<Response, String> {
         match self.client.get(url).send() {
             Ok(r) => Ok(r),
@@ -73,6 +97,10 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Series
 
+    /// [See fred_rs::series](../series/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series.html#series_id)
     pub fn series(
         &mut self,
         series_id: &str,
@@ -115,6 +143,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::categories](../series/categories/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_categories.html#series_id)
     pub fn series_categories(
         &mut self,
         series_id: &str,
@@ -157,6 +189,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::observation](../series/observation/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_observation.html#series_id)
     pub fn series_observation(
         &mut self,
         series_id: &str,
@@ -199,6 +235,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::release](../series/release/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_release.html#series_id)
     pub fn series_release(
         &mut self,
         series_id: &str,
@@ -241,6 +281,10 @@ impl FredClient {
         }
     }
     
+    /// [See fred_rs::series::tags](../series/tags/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_tags.html#series_id)
     pub fn series_tags(
         &mut self,
         series_id: &str,
@@ -284,6 +328,7 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::updates](../series/updates/index.html)
     pub fn series_updates(
         &mut self,
         builder: Option<series::updates::Builder>
@@ -325,6 +370,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::vintagedates](../series/vintagedates/index.html)
+    /// 
+    /// # Arguments
+    /// `series_id` - The id for a series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html#series_id)
     pub fn series_vintagedates(
         &mut self,
         series_id: &str,
@@ -370,6 +419,11 @@ impl FredClient {
 
     // ----------------------------------------------------------------------
     // Series/Search
+
+    /// [See fred_rs::series::search](../series/search/index.html)
+    /// 
+    /// # Arguments
+    /// `search_text` - The words to match against economic data series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_search.html#search_text)
     pub fn series_search(
         &mut self,
         search_text: &str,
@@ -414,6 +468,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::search::tags](../series/search/tags/index.html)
+    /// 
+    /// # Arguments
+    /// `series_search_text` - The words to match against economic data series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_search_tags.html#search_text)
     pub fn series_search_tags(
         &mut self,
         series_search_text: &str,
@@ -458,6 +516,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::series::search::related_tags](../series/search/related_tags/index.html)
+    /// 
+    /// # Arguments
+    /// `series_search_text` - The words to match against economic data series [[Link]](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#search_text)
     pub fn series_search_related_tags(
         &mut self,
         series_search_text: &str,
@@ -506,6 +568,7 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Tags
 
+    /// [See fred_rs::tags](../tags/index.html)
     pub fn tags(
         &mut self,
         builder: Option<tags::Builder>
@@ -546,6 +609,7 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::tags::series](../tags/series/index.html)
     pub fn tags_series(
         &mut self,
         builder: tags::series::Builder
@@ -589,6 +653,7 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Related Tags
 
+    /// [See fred_rs::related_tags](../related_tags/index.html)
     pub fn related_tags(
         &mut self,
         builder: related_tags::Builder
@@ -632,6 +697,7 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Sources
 
+    /// [See fred_rs::sources](../sources/index.html)
     pub fn sources(
         &mut self,
         builder: Option<sources::Builder>
@@ -675,6 +741,10 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Source
 
+    /// [See fred_rs::source](../source/index.html)
+    /// 
+    /// # Arguments
+    /// `source_id` - The id for a source [[Link]](https://research.stlouisfed.org/docs/api/fred/source.html#source_id)
     pub fn source(
         &mut self,
         source_id: usize,
@@ -717,6 +787,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::source::releases](../source/releases/index.html)
+    /// 
+    /// # Arguments
+    /// `source_id` - The id for a source [[Link]](https://research.stlouisfed.org/docs/api/fred/source_releases.html#source_id)
     pub fn source_releases(
         &mut self,
         source_id: usize,
@@ -762,6 +836,10 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Category
 
+    /// [See fred_rs::category](../category/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category.html#category_id)
     pub fn category(
         &mut self,
         category_id: usize
@@ -798,6 +876,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::category::children](../category/children/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_children.html#category_id)
     pub fn category_children(
         &mut self,
         category_id: usize
@@ -834,6 +916,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::category::related](../category/related/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_related.html#category_id)
     pub fn category_related(
         &mut self,
         category_id: usize
@@ -870,6 +956,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::category::series](../category/series/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/series.html#category_id)
     pub fn category_series(
         &mut self,
         category_id: usize,
@@ -912,6 +1002,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::category::tags](../category/tags/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_tags.html#category_id)
     pub fn category_tags(
         &mut self,
         category_id: usize,
@@ -954,6 +1048,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::category::related_tags](../category/related_tags/index.html)
+    /// 
+    /// # Arguments
+    /// `category_id` - The id for a category [[Link]](https://research.stlouisfed.org/docs/api/fred/category_related_tags.html#category_id)
     pub fn category_related_tags(
         &mut self,
         category_id: usize,
@@ -999,6 +1097,7 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Releases
 
+    /// [See fred_rs::releases](../releases/index.html)
     pub fn releases(
         &mut self,
         builder: Option<releases::Builder>
@@ -1039,6 +1138,7 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::releases::dates](../releases/dates/index.html)
     pub fn releases_dates(
         &mut self,
         builder: Option<releases::dates::Builder>
@@ -1082,6 +1182,10 @@ impl FredClient {
     // ----------------------------------------------------------------------
     // Release
 
+    /// [See fred_rs::release](../release/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release.html#release_id)
     pub fn release(
         &mut self,
         release_id: usize,
@@ -1124,6 +1228,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::release::series](../release/series/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release_series.html#release_id)
     pub fn release_series(
         &mut self,
         release_id: usize,
@@ -1166,6 +1274,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::release::sources](../release/sources/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release_sources.html#release_id)
     pub fn release_sources(
         &mut self,
         release_id: usize,
@@ -1208,6 +1320,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::release::tags](../release/tags/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release_tags.html#release_id)
     pub fn release_tags(
         &mut self,
         release_id: usize,
@@ -1250,6 +1366,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::release::related_tags](../release/related_tags/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release_related_tags.html#release_id)
     pub fn release_related_tags(
         &mut self,
         release_id: usize,
@@ -1292,6 +1412,10 @@ impl FredClient {
         }
     }
 
+    /// [See fred_rs::release::tables](../release/tables/index.html)
+    /// 
+    /// # Arguments
+    /// `release_id` - The id for a release [[Link]](https://research.stlouisfed.org/docs/api/fred/release_tables.html#release_id)
     pub fn release_tables(
         &mut self,
         release_id: usize,
