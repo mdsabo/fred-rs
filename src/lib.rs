@@ -1,5 +1,5 @@
 #![crate_name = "fred_rs"]
-#![doc(html_root_url = "https://docs.rs/fred-rs/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/fred-rs/0.1.1")]
 
 //! **fred-rs** is a simple interface for accessing the Federal Reserve Bank of St. Louis's FRED API.
 //! 
