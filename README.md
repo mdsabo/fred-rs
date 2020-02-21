@@ -14,6 +14,12 @@
 
 Access to the raw data is available through the FRED API.  fred-rs is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
 
+## Useful Links
+fred-rs Docs
+[FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation)
+[FRED API Key Information](https://research.stlouisfed.org/docs/api/api_key.html)
+
+
 ## Overview
 fred-rs acts as a middleman to facilitate requests to the FRED API.  The user application
 creates and manages a `FredClient`, which manages the HTTPS client and parses incoming data.  
@@ -90,3 +96,15 @@ let mut client = match FredClient::new() {
 
 client.with_key("abcdefghijklmnopqrstuvwxyz123456");
 ```
+
+## Issues/Bugs/Improvments
+If you discover any issues or bugs or want to suggest any improvements, feel free 
+to open a GitHub issue or email me directly at [matthewdsabo@gmail.com](mailto: matthewdsabo@gmail.com).
+
+<br>
+
+#### License
+
+<sup>
+Licensed under <a href="LICENSE-MIT">MIT license</a>.
+</sup>
