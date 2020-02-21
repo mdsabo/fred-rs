@@ -35,8 +35,9 @@
 //! ```
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/series/vintagedates endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html] (https://research.stlouisfed.org/docs/api/fred/series_vintagedates.html)
@@ -57,6 +58,22 @@ pub struct Response {
     pub limit: usize,
     /// Series returned by the search
     pub vintage_dates: Vec<String>,
+}
+
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.vintage_dates.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
 }
 
 /// Sort order options for the fred/series/vintagedates endpoint

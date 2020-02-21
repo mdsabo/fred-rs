@@ -41,8 +41,9 @@ pub mod tables;
 
 // -----------------------------------------------------------------------------
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/release endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/release.html] (https://research.stlouisfed.org/docs/api/fred/release.html)
@@ -65,7 +66,23 @@ pub struct Response {
     pub releases: Vec<Release>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.releases.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing information about a particular release
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/release.html](https://research.stlouisfed.org/docs/api/fred/release.html)
@@ -84,6 +101,12 @@ pub struct Release {
     pub link: Option<String>,
     /// Addition notes about the release
     pub notes: Option<String>
+}
+
+impl Display for Release {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Release {}: {}", self.id, self.name)
+    }
 }
 
 pub struct Builder {

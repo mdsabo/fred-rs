@@ -37,8 +37,9 @@ pub mod releases;
 // -----------------------------------------------------------------------------
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/source endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/source.html] (https://research.stlouisfed.org/docs/api/fred/source.html)
@@ -61,7 +62,23 @@ pub struct Response {
     pub sources: Vec<Source>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.sources.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing infomation about a particular tag
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/source.html](https://research.stlouisfed.org/docs/api/fred/source.html)
@@ -78,6 +95,12 @@ pub struct Source {
     pub link: Option<String>,
     /// Additional notes about the source
     pub notes: Option<String>
+}
+
+impl Display for Source {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Soruce {}: {}", self.id, self.name)
+    }
 }
 
 pub struct Builder {

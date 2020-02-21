@@ -48,8 +48,9 @@ pub mod vintagedates;
 
 // ----------------------------------------------------------------------------
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/series endpoint
 /// 
 /// Order_by, sort_order, count, offset and limit are used by endpoints which return a list of series.  They can be ignored for the fred/series endpoint.
@@ -76,7 +77,23 @@ pub struct Response {
     pub seriess: Vec<Series>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.seriess.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing infomation about a particular data series
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series.html](https://research.stlouisfed.org/docs/api/fred/series.html)
@@ -113,6 +130,12 @@ pub struct Series {
     pub group_popularity: Option<isize>,
     /// Additional Notes
     pub notes: Option<String>,
+}
+
+impl Display for Series {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Series {}: {}", self.id, self.title)
+    }
 }
 
 pub struct Builder {

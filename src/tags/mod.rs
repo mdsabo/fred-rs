@@ -45,8 +45,9 @@ pub mod series;
 // -----------------------------------------------------------------------------
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/tags endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/tags.html] (https://research.stlouisfed.org/docs/api/fred/tags.html)
@@ -69,7 +70,23 @@ pub struct Response {
     pub tags: Vec<Tag>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.tags.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing infomation about a particular tag
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/tags.html](https://research.stlouisfed.org/docs/api/fred/tags.html)
@@ -86,6 +103,12 @@ pub struct Tag {
     pub popularity: isize,
     /// Number of series with the tag
     pub series_count: usize,
+}
+
+impl Display for Tag {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Tag {}", self.name)
+    }
 }
 
 /// A tag group id to filter tags by type.

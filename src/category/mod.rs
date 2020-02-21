@@ -38,8 +38,9 @@ pub mod related_tags;
 // -----------------------------------------------------------------------------
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for a collection of categories
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/category.html] (https://research.stlouisfed.org/docs/api/fred/category.html)
@@ -48,7 +49,23 @@ pub struct Response {
     pub categories: Vec<Category>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.categories.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing infomation about a particular category
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/category.html](https://research.stlouisfed.org/docs/api/fred/category.html)
@@ -61,6 +78,12 @@ pub struct Category {
     pub parent_id: usize,
     /// Additional information about the category
     pub notes: Option<String>,
+}
+
+impl Display for Category {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Category {}: {}", self.id, self.name)
+    }
 }
 
 #[cfg(test)]

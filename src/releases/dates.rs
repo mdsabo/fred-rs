@@ -33,8 +33,9 @@
 //! ```
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/releases/dates endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/releases_dates.html] (https://research.stlouisfed.org/docs/api/fred/releases_dates.html)
@@ -57,7 +58,23 @@ pub struct Response {
     pub release_dates: Vec<ReleaseDate>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.release_dates.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Data structure containing infomation about a particular release
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/releases_dates.html](https://research.stlouisfed.org/docs/api/fred/releases_dates.html)
@@ -68,6 +85,12 @@ pub struct ReleaseDate {
     pub release_name: Option<String>,
     /// The date of the release
     pub date: String,
+}
+
+impl Display for ReleaseDate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "Release Date {}: {}", self.release_id, self.date)
+    }
 }
 
 /// Determines the order of search results

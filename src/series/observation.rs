@@ -35,8 +35,9 @@
 //! ```
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/series/observation endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
@@ -69,7 +70,23 @@ pub struct Response {
     pub observations: Vec<DataPoint>,
 }
 
-#[derive(Deserialize)]
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.observations.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
+}
+
+#[derive(Deserialize, Clone, Debug, Default)]
 /// A single observation datapoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
@@ -80,6 +97,12 @@ pub struct DataPoint {
     pub date: String,
     /// String encoded data point
     pub value: String,
+}
+
+impl Display for DataPoint {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "({}: {})", self.date, self.value)
+    }
 }
 
 /// Sort order options for the fred/series/observation endpoint

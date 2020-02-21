@@ -39,10 +39,11 @@
 //! ```
 
 use serde::Deserialize;
+use std::fmt::{self, Display, Formatter};
 
 use crate::series::Series;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Clone, Debug, Default)]
 /// Response data structure for the fred/series/updates endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html] (https://research.stlouisfed.org/docs/api/fred/series_updates.html)
@@ -67,6 +68,22 @@ pub struct Response {
     pub limit: usize,
     /// Series returned by the search
     pub seriess: Vec<Series>,
+}
+
+impl Display for Response {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for item in self.seriess.iter() {
+            match item.fmt(f) {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+            match writeln!(f, "") {
+                Ok(_) => (),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(())
+    }
 }
 
 /// Used to filter series included in the results

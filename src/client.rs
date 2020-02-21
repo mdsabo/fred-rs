@@ -42,6 +42,7 @@ use crate::*;
 const FRED_BASE_URL: &str = "https://api.stlouisfed.org/fred/";
 const FRED_API_KEY: &str = "FRED_API_KEY";
 
+#[derive(Clone, Debug)]
 /// Persistent client object used to access the FRED API
 /// 
 /// Each method for the client represents a data endpoint provided by the API and will return a data object representing the response contents.
