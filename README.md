@@ -31,8 +31,8 @@ Access to the raw data is available through the FRED API.  <b>fred-rs</b> is an 
 
 ## fred-rs Overview
 <b>fred-rs</b> acts as a middleman to facilitate requests to the FRED API.  The user application
-creates and manages a `FredClient`, which manages the HTTPS client and parses incoming data.  
-Currently the client uses the reqwest::blocking::client, but if there exists a need for an
+creates and manages a `FredClient`, which manages the HTTPS client and parses incoming data.  Currently 
+the client uses the reqwest::blocking::client, but if there exists a need for an
 async version then that can be explored.  The diagram below shows the general architecture 
 from an application standpoint.
 
