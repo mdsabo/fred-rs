@@ -5,6 +5,7 @@ authors = ["Matthew Sabo <matthewdsabo@gmail.com>"]
 license = "MIT"
 description = "An interface for accessing the St. Louis Fed's FRED API"
 repository = "https://github.com/mdsabo/fred-rs"
+documentation = "https://docs.rs/fred-rs/0.1.0"
 readme = "README.md"
 include = ["Cargo.toml", "src/**/*.rs", "README.md", "LICENSE-MIT", "LICENSE-APACHE"]
 edition = "2018"
