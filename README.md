@@ -12,7 +12,15 @@
 
 ![Unemployment Graph](README/fredgraph.png)
 
-Access to the raw data is available through the FRED API.  fred-rs is an intermediate layer between the HTTP client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
+Access to the raw data is available through the FRED API.  fred-rs is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
+
+## Overview
+fred-rs acts as a middleman to facilitate requests to the FRED API.  The user application
+creates and manages a `FredClient`, which manages the HTTPS client and parses incoming data.  
+Currently the client uses the reqwest::blocking::client, but if there exists a need for an
+async version then that can be explored.  The diagram below shows the general architecture 
+from an application standpoint.
+[architecture](README/architecture.png)
 
 ## Usage
 Below is an example of the general usage for accessing an observation or data series.
@@ -49,8 +57,10 @@ let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
 };
 ```
 
+#### Request Parameters
 All endpoints use the builder approach to construct the API URL.  Each builder 
-method corresponds to a paramter that can be added to the API request.  
+method corresponds to a paramter that can be added to the API request. 
+
 In the example above, three parameters are added to the request, observation_start, units and frequency.
 The [FRED API Documentation](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) 
 explains the possible parameters for each endpoint.  Required paramters (except the `tag_names` paramter) are
