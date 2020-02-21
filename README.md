@@ -15,7 +15,9 @@
 
 <hr>
 
- FRED (Federal Reserve Economic Data) is a large online database of economic data hosted by the Federal Reserve Bank of St. Louis.  The website currently hosts approximately "672,000 US and international time series from 89 sources" including the the graph of unemployment rate shown below.
+## FRED (Federal Reserve Economic Data)
+
+ FRED is a large online database of economic data hosted by the Federal Reserve Bank of St. Louis.  The website currently hosts approximately "672,000 US and international time series from 89 sources" including the the graph of unemployment rate shown below.
 
 <p align="center"> 
 <img src="README/fredgraph.png" alt="Unemployment Graph">
