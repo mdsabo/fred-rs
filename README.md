@@ -9,7 +9,7 @@
  ```
 
  ## Useful Links
-<s>fred-rs</s> Docs <br>
+<b>fred-rs</b> Docs <br>
 [FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) <br>
 [FRED API Key Information](https://research.stlouisfed.org/docs/api/api_key.html)
 
@@ -25,10 +25,10 @@ U.S. Bureau of Labor Statistics, Unemployment Rate [UNRATE], retrieved from FRED
 <sup/>
 </p>
 
-Access to the raw data is available through the FRED API.  <s>fred-rs</s> is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
+Access to the raw data is available through the FRED API.  <b>fred-rs</b> is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
 
 ## fred-rs Overview
-<s>fred-rs</s> acts as a middleman to facilitate requests to the FRED API.  The user application
+<b>fred-rs</b> acts as a middleman to facilitate requests to the FRED API.  The user application
 creates and manages a `FredClient`, which manages the HTTPS client and parses incoming data.  
 Currently the client uses the reqwest::blocking::client, but if there exists a need for an
 async version then that can be explored.  The diagram below shows the general architecture 
@@ -87,7 +87,7 @@ accepts a list of arguments, so it is easier to pass this argument to the builde
 ## API Key
 Developers need to request an API Key in order to access FRED.  This can be done at [https://research.stlouisfed.org/docs/api/api_key.html](https://research.stlouisfed.org/docs/api/api_key.html).
 
-<s>fred-rs</s> looks for the `FRED_API_KEY` environment variable by default.  This can be set using
+<b>fred-rs</b> looks for the `FRED_API_KEY` environment variable by default.  This can be set with the following line in BASH.
 ```bash
 export FRED_API_KEY=abcdefghijklmnopqrstuvwxyz123456
 ```
