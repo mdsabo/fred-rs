@@ -20,7 +20,7 @@ creates and manages a `FredClient`, which manages the HTTPS client and parses in
 Currently the client uses the reqwest::blocking::client, but if there exists a need for an
 async version then that can be explored.  The diagram below shows the general architecture 
 from an application standpoint.
-[architecture](README/architecture.png)
+![architecture](README/architecture.png)
 
 ## Usage
 Below is an example of the general usage for accessing an observation or data series.
