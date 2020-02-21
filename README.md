@@ -21,8 +21,8 @@ U.S. Bureau of Labor Statistics, Unemployment Rate [UNRATE], retrieved from FRED
 Access to the raw data is available through the FRED API.  fred-rs is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
 
 ## Useful Links
-fred-rs Docs
-[FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation)
+fred-rs Docs <br>
+[FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) <br>
 [FRED API Key Information](https://research.stlouisfed.org/docs/api/api_key.html)
 
 
