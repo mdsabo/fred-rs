@@ -27,7 +27,7 @@ U.S. Bureau of Labor Statistics, Unemployment Rate [UNRATE], retrieved from FRED
 <sup/>
 </p>
 
-Access to the raw data is available through the FRED API.  <b>fred-rs</b> is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
+Access to the raw data is available through the FRED API.  <b>fred-rs</b> is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the `fred_rs::FredClient` and data is returned as usable data objects (structs).
 
 ## fred-rs Overview
 <b>fred-rs</b> acts as a middleman to facilitate requests to the FRED API.  The user application
