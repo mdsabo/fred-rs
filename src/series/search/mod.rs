@@ -129,7 +129,7 @@ impl Builder {
     }
 
     /// Returns the current arguments as a URL formatted string
-    pub fn options(mut self) -> String {
+    pub(crate) fn build(mut self) -> String {
         if self.include_tags.len() > 0 {
             self.option_string += format!("&tag_names={}", self.include_tags).as_str()
         }

@@ -148,7 +148,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 
@@ -422,7 +422,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
         
@@ -473,7 +473,7 @@ impl FredClient {
         );
 
         match builder {
-            Some(b) => url.push_str(b.options().as_str()),
+            Some(b) => url.push_str(b.build().as_str()),
             None => (),
         }
 

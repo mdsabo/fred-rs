@@ -114,7 +114,7 @@ impl Builder {
     /// Returns the current arguments as a URL formatted string
     /// 
     /// Returns Err if there are not tag names specified using tag_name().
-    pub fn options(self) -> String {
+    pub(crate) fn build(self) -> String {
         self.option_string
     }
 
