@@ -374,7 +374,7 @@ impl FredClient {
         &mut self,
         search_text: &str,
         builder: Option<series::search::Builder>
-    ) -> Result<series::search::Response, String> {
+    ) -> Result<series::Response, String> {
         let search_text = search_text.replace(" ", "%20"); // encode strings in url
 
         let mut url: String = format!(
@@ -418,7 +418,7 @@ impl FredClient {
         &mut self,
         series_search_text: &str,
         builder: Option<series::search::tags::Builder>
-    ) -> Result<series::search::tags::Response, String> {
+    ) -> Result<tags::Response, String> {
         let search_text = series_search_text.replace(" ", "%20"); // encode spaces in url
 
         let mut url: String = format!(
@@ -462,7 +462,7 @@ impl FredClient {
         &mut self,
         series_search_text: &str,
         builder: series::search::related_tags::Builder
-    ) -> Result<series::search::related_tags::Response, String> {
+    ) -> Result<tags::Response, String> {
 
         let search_text = series_search_text.replace(" ", "%20"); // encode spaces in url
 
@@ -929,8 +929,6 @@ impl FredClient {
             None => (),
         }
 
-        println!("{}", url);
-
         match self.get_request(url.as_str()) {
             Ok(resp) => {
                 let text = resp.text().unwrap();
@@ -972,8 +970,6 @@ impl FredClient {
             Ok(o) => url.push_str(o.as_str()),
             Err(msg) => return Err(msg),
         }
-
-        println!("{}", url);
 
         match self.get_request(url.as_str()) {
             Ok(resp) => {

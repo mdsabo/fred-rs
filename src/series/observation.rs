@@ -1,26 +1,35 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// JSON object returned by the FRED API fred/series/observation endpoint
-/// 
-/// Individual datapoints (observations) are kept in a vector of observation objects.
-/// 
-/// The members primarily represent arguments passed to the API so for more specific info on each member see the associated ObservationBuilder argument function.
+/// Response data structure for the fred/series/observation endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html](https://research.stlouisfed.org/docs/api/fred/series_observations.html)
 pub struct Response {
+    /// The realtime start of the request
     pub realtime_start: String,
+    /// The realtiem end of the request
     pub realtime_end: String,
+    /// The start of the observation period
     pub observation_start: String,
+    /// The end of the observation period
     pub observation_end: String,
+    /// The units of the observation (e.g. Billions of Chained 2009 Dollars)
     pub units: String,
+    /// The output type [Link](enum.OutputType.html)
     pub output_type: usize,
+    /// The file type (will always be JSON for fred-rs)
     pub file_type: String,
+    /// On what metric the data are order
     pub order_by: String,
+    /// Ascending (asc) of descending (desc)
     pub sort_order: String,
+    /// The number of data items returned
     pub count: usize,
+    /// The first result returned
     pub offset: usize,
+    /// The maximum number of results requested
     pub limit: usize,
+    /// The data values returned
     pub observations: Vec<DataPoint>,
 }
 
@@ -35,14 +44,6 @@ pub struct DataPoint {
     pub date: String,
     /// String encoded data point
     pub value: String,
-}
-
-/// Argument builder for the fred/series/observation endpoint.
-/// 
-/// Each method adds an argument to the builder which can then be passed to the client used to fetch the data to apply the arguments.
-pub struct Builder {
-    option_string: String,
-    vintage_dates: String,
 }
 
 /// Sort order options for the fred/series/observation endpoint
@@ -143,15 +144,23 @@ pub enum OutputType {
     VDALL,
     /// Observations by Vintage Date, New and Revised Observations Only
     VDNEW,
-    /// Observations, Initial Relase Only
+    /// Observations, Initial Release Only
     INITIAL
+}
+
+/// Argument builder for the fred/series/observation endpoint.
+/// 
+/// Each method adds an argument to the builder which can then be passed to the client used to fetch the data to apply the arguments.
+pub struct Builder {
+    option_string: String,
+    vintage_dates: String,
 }
 
 
 impl Builder {
     /// Initializes a new observation::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::series::observation::{Builder, Units, SortOrder};
@@ -183,6 +192,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#realtime_start](https://research.stlouisfed.org/docs/api/fred/series_observations.html#realtime_start)
     pub fn realtime_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_start={}", start_date).as_str();
         self
@@ -192,6 +203,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `end_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#realtime_end](https://research.stlouisfed.org/docs/api/fred/series_observations.html#realtime_end)
     pub fn realtime_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
         self
@@ -203,6 +216,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `num_points` - Maximum number of data points to return
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#limit](https://research.stlouisfed.org/docs/api/fred/series_observations.html#limit)
     pub fn limit(&mut self, num_points: usize) -> &mut Builder {
         let num_points = if num_points > 1000000 { // max value is 1000
             1000000
@@ -215,12 +230,12 @@ impl Builder {
 
     /// Adds an offset argument to the builder
     /// 
-    /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
-    /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_observations.html#offset
+    /// Adding an offset shifts the starting result number.  For example, if limit is 5 and offset is 0 then results 1-5 will be returned, but if offset was 5 then results 6-10 would be returned.
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#offset](https://research.stlouisfed.org/docs/api/fred/series_observations.html#offset)
     pub fn offset(&mut self, ofs: usize) -> &mut Builder {
         self.option_string += format!("&offset={}", ofs).as_str();
         self
@@ -230,6 +245,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `order` - Data sort order enum
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_observations.html#sort_order)
     pub fn sort_order(&mut self, order: SortOrder) -> &mut Builder {
         match order {
             SortOrder::Descending => {
@@ -244,6 +261,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#observation_start](https://research.stlouisfed.org/docs/api/fred/series_observations.html#observation_start)
     pub fn observation_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&observation_start={}", start_date).as_str();
         self
@@ -253,6 +272,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `end_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#observation_end](https://research.stlouisfed.org/docs/api/fred/series_observations.html#observation_end)
     pub fn observation_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&observation_end={}", end_date).as_str();
         self
@@ -262,6 +283,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `units` - Data units to apply to the data set (see ObservationUnits)
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#units](https://research.stlouisfed.org/docs/api/fred/series_observations.html#units)
     pub fn units(&mut self, units: Units) -> &mut Builder {
         match units {
             Units::CHG => {
@@ -299,6 +322,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `freq` - Frequency of data observations to return
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#frequency](https://research.stlouisfed.org/docs/api/fred/series_observations.html#frequency)
     pub fn frequency(&mut self, freq: Frequency) -> &mut Builder {
         match freq {
             Frequency::D => {
@@ -357,6 +382,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `method` - See `ObservationAggregationMethod`
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#aggregation_method](https://research.stlouisfed.org/docs/api/fred/series_observations.html#aggregation_method)
     pub fn aggregation_method(&mut self, method: AggregationMethod) -> &mut Builder {
         match method {
             AggregationMethod::SUM => {
@@ -373,7 +400,9 @@ impl Builder {
     /// Set the datapoint output type
     /// 
     /// # Arguments
-    /// * `otype` - See `ObservationOutputType`
+    /// * `otype` - [OutputType](enum.OutputType.hmtl)
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_observations.html#output_type](https://research.stlouisfed.org/docs/api/fred/series_observations.html#output_type)
     pub fn output_type(&mut self, otype: OutputType) -> &mut Builder {
         match otype {
             OutputType::VDALL => {

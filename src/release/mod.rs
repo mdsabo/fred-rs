@@ -1,5 +1,7 @@
 
-/// fred/release/series endpoint
+/// Get the series on a release of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_series.html](https://research.stlouisfed.org/docs/api/fred/release_series.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -41,7 +43,9 @@
 /// ```
 pub mod series;
 
-/// fred/release/sources endpoint
+/// Get the sources for a release of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_sources.html](https://research.stlouisfed.org/docs/api/fred/release_sources.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -76,7 +80,9 @@ pub mod series;
 /// ```
 pub mod sources;
 
-/// fred/release/tags endpoint
+/// Get the tags for a release
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_tags.html](https://research.stlouisfed.org/docs/api/fred/release_tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -113,7 +119,9 @@ pub mod sources;
 /// ```
 pub mod tags;
 
-/// fred/release/related_tags endpoint
+/// Get the related tags for a release
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_related_tags.html](https://research.stlouisfed.org/docs/api/fred/release_related_tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -151,7 +159,9 @@ pub mod tags;
 /// ```
 pub mod related_tags;
 
-/// fred/release/tables endpoint
+/// Get the release tables for a given release
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release_tables.html](https://research.stlouisfed.org/docs/api/fred/release_tables.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -212,7 +222,7 @@ pub struct Response {
 }
 
 #[derive(Deserialize)]
-/// Data structure containing infomation about a particular release
+/// Data structure containing information about a particular release
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/release.html](https://research.stlouisfed.org/docs/api/fred/release.html)
 pub struct Release {
@@ -240,7 +250,7 @@ impl Builder {
 
     /// Initializes a new series::release::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::release::Builder;
@@ -266,6 +276,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release.html#realtime_start](https://research.stlouisfed.org/docs/api/fred/release.html#realtime_start)
     pub fn realtime_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_start={}", start_date).as_str();
         self
@@ -275,6 +287,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `end_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release.html#realtime_end](https://research.stlouisfed.org/docs/api/fred/release.html#realtime_end)
     pub fn realtime_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
         self

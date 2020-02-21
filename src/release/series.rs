@@ -18,7 +18,7 @@ pub enum OrderBy {
     GroupPopularity,
 }
 
-/// Sort order options for the fred/series/observation endpoint
+/// Sort order options for the fred/release/series endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order](https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order)
 pub enum SortOrder {
@@ -49,7 +49,7 @@ impl Builder {
 
     /// Initializes a new release::series::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::release::series::Builder;
@@ -83,6 +83,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#realtime_start](https://research.stlouisfed.org/docs/api/fred/release_series.html#realtime_start)
     pub fn realtime_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_start={}", start_date).as_str();
         self
@@ -92,6 +94,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `end_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#realtime_end](https://research.stlouisfed.org/docs/api/fred/release_series.html#realtime_end)
     pub fn realtime_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
         self
@@ -103,6 +107,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `num_results` - Maximum number of results to return
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#limit](https://research.stlouisfed.org/docs/api/fred/release_series.html#limit)
     pub fn limit(&mut self, num_results: usize) -> &mut Builder {
         let num_results = if num_results > 1000 { // max value is 1000
             1000
@@ -115,12 +121,12 @@ impl Builder {
 
     /// Adds an offset argument to the builder
     /// 
-    /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
-    /// 
-    /// https://research.stlouisfed.org/docs/api/fred/release_series.html#offset
-    /// 
+    /// Adding an offset shifts the starting result number.  For example, if limit is 5 and offset is 0 then results 1-5 will be returned, but if offset was 5 then results 6-10 would be returned.
+    ///  
     /// # Arguments
     /// * `ofs` - the offset amount
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#offset](https://research.stlouisfed.org/docs/api/fred/release_series.html#offset)
     pub fn offset(&mut self, ofs: usize) -> &mut Builder {
         self.option_string += format!("&offset={}", ofs).as_str();
         self
@@ -130,6 +136,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `order` - result ranking system
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#order_by](https://research.stlouisfed.org/docs/api/fred/release_series.html#order_by)
     pub fn order_by(&mut self, order: OrderBy) -> &mut Builder {
         match order {
             OrderBy::SeriesId => {
@@ -176,6 +184,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `order` - Data sort order enum
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order](https://research.stlouisfed.org/docs/api/fred/release_series.html#sort_order)
     pub fn sort_order(&mut self, order: SortOrder) -> &mut Builder {
         match order {
             SortOrder::Descending => {
@@ -190,6 +200,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `var` - the varible by which to filter
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_variable](https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_variable)
     pub fn filter_variable(&mut self, var: FilterVariable) -> &mut Builder {
         match var {
             FilterVariable::Frequency => {
@@ -211,6 +223,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `val` - the filter value
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_value](https://research.stlouisfed.org/docs/api/fred/release_series.html#filter_value)
     pub fn filter_value(&mut self, val: &str) -> &mut Builder {
         self.option_string += format!("&filter_value={}", val).as_str();
         self
@@ -222,6 +236,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `tag` - tag name to add
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#tag_names](https://research.stlouisfed.org/docs/api/fred/release_series.html#tag_names)
     pub fn tag_name(&mut self, tag: &str) -> &mut Builder {
         if self.include_tags.len() != 0 {
             self.include_tags.push(';');
@@ -236,6 +252,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `tag` - tag name to add
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_series.html#exclude_tag_names](https://research.stlouisfed.org/docs/api/fred/release_series.html#exclude_tag_names)
     pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
         if self.exclude_tags.len() != 0 {
             self.exclude_tags.push(';');

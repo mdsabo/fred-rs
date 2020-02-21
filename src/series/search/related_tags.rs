@@ -1,48 +1,5 @@
-use serde::Deserialize;
 
 const TAG_NAME_REQUIRED_ERROR_TEXT: &str = "At least one tag must be specified using the tag_name() function of the related_tags::Builder.";
-
-#[derive(Deserialize)]
-/// Response data structure for the fred/series/search/related_tags endpoint
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html] (https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
-pub struct Response {
-    /// The Real Time start date for the request
-    pub realtime_start: String,
-    /// The Real Time end data for the request
-    pub realtime_end: String,
-    /// How the results are ordered
-    pub order_by: String,
-    // Results are listed in ascending or descending
-    pub sort_order: String,
-    /// Number of results returned
-    pub count: usize,
-    /// ???
-    pub offset: usize,
-    /// Maximum number of results to return
-    pub limit: usize,
-    /// Series returned by the search
-    pub tags: Vec<Tag>,
-}
-
-#[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
-/// 
-/// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html)
-pub struct Tag {
-    /// The tag name
-    pub name: String,
-    /// The group ID string
-    pub group_id: String,
-    /// Additonal information about the tag (e.g. authors or sources)
-    pub notes: Option<String>,
-    /// Date and time the tag was created
-    pub created: String,
-    /// Popularity score
-    pub popularity: isize,
-    /// Number of series with the tag
-    pub series_count: usize,
-}
 
 /// Determines the order of search results
 /// 
@@ -56,7 +13,7 @@ pub enum OrderBy {
     GroupId,
 }
 
-/// Sort order options for the fred/series/observation endpoint
+/// Sort order options for the fred/series/search/related_tags endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order)
 pub enum SortOrder {
@@ -89,7 +46,7 @@ impl Builder {
 
     /// Initializes a new series::search::related_tags::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::series::search::related_tags::Builder;
@@ -127,6 +84,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#realtime_start](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#realtime_start)
     pub fn realtime_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_start={}", start_date).as_str();
         self
@@ -136,6 +95,7 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `end_date` - date formatted as YYYY-MM-DD
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#realtime_end](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#realtime_end)
     pub fn realtime_end(&mut self, end_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_end={}", end_date).as_str();
         self
@@ -147,6 +107,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `tag` - tag name to add
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_names](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_names)
     pub fn tag_name(&mut self, tag: &str) -> &mut Builder {
         if self.tag_names.len() != 0 {
             self.tag_names.push(';');
@@ -161,6 +123,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `tag` - tag name to add
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#exclude_tag_names](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#exclude_tag_names)
     pub fn exclude_tag(&mut self, tag: &str) -> &mut Builder {
         if self.exclude_tags.len() != 0 {
             self.exclude_tags.push(';');
@@ -173,6 +137,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `id` - type by which to filter results
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_group_id)
     pub fn tag_group_id(&mut self, id: TagGroupId) -> &mut Builder {
         match id {
             TagGroupId::Frequency => {
@@ -204,7 +170,9 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `search_string` - tag name to add
-    pub fn search_text(&mut self, search_string: &str) -> &mut Builder {
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_search_text](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#tag_search_text)
+    pub fn tag_search_text(&mut self, search_string: &str) -> &mut Builder {
         let search_string = search_string.replace(" ", "%20"); // encode for URL
         self.option_string += format!("&tag_search_text={}", search_string).as_str();
         self
@@ -216,6 +184,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `num_results` - Maximum number of results to return
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#limit](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#limit)
     pub fn limit(&mut self, num_results: usize) -> &mut Builder {
         let num_results = if num_results > 1000 { // max value is 1000
             1000
@@ -228,12 +198,12 @@ impl Builder {
 
     /// Adds an offset argument to the builder
     /// 
-    /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
-    /// 
-    /// https://research.stlouisfed.org/docs/api/fred/series_search.html#offset
+    /// Adding an offset shifts the starting result number.  For example, if limit is 5 and offset is 0 then results 1-5 will be returned, but if offset was 5 then results 6-10 would be returned.
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#offset](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#offset)
     pub fn offset(&mut self, ofs: usize) -> &mut Builder {
         self.option_string += format!("&offset={}", ofs).as_str();
         self
@@ -243,6 +213,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `order` - result ranking system
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#order_by)
     pub fn order_by(&mut self, order: OrderBy) -> &mut Builder {
         match order {
             OrderBy::SeriesCount => {
@@ -268,6 +240,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `order` - Data sort order enum
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order](https://research.stlouisfed.org/docs/api/fred/series_search_related_tags.html#sort_order)
     pub fn sort_order(&mut self, order: SortOrder) -> &mut Builder {
         match order {
             SortOrder::Descending => {
@@ -283,6 +257,7 @@ impl Builder {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tags::Response;
     use crate::client::FredClient;
 
     #[test]

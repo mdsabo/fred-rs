@@ -1,5 +1,7 @@
 
-/// fred/category/children endpoint
+/// Get the child categories for a specified parent category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category_children.html](https://research.stlouisfed.org/docs/api/fred/category_children.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -29,7 +31,9 @@
 /// ```
 pub mod children;
 
-/// fred/category/children endpoint
+/// Get the related categories for a category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category_related.html](https://research.stlouisfed.org/docs/api/fred/category_related.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -60,6 +64,8 @@ pub mod children;
 pub mod related;
 
 /// Get the series in a category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category_series.html](https://research.stlouisfed.org/docs/api/fred/category_series.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -102,7 +108,9 @@ pub mod related;
 pub mod series;
 
 
-/// Get the FRED tags for a category
+/// Get the tags for a category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category_tags.html](https://research.stlouisfed.org/docs/api/fred/category_tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -144,7 +152,9 @@ pub mod series;
 /// ```
 pub mod tags;
 
-/// Get the related FRED tags for one or more FRED tags within a category
+/// Get the related tags for a category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category_related_tags.html](https://research.stlouisfed.org/docs/api/fred/category_related_tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -192,24 +202,24 @@ pub mod related_tags;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/category endpoint
+/// Response data structure for a collection of categories
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/category.html] (https://research.stlouisfed.org/docs/api/fred/category.html)
 pub struct Response {
-    /// Series returned by the search
+    /// List of categories returned by the query
     pub categories: Vec<Category>,
 }
 
 #[derive(Deserialize)]
-/// Data structure containing infomation about a particular tag
+/// Data structure containing infomation about a particular category
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/category.html](https://research.stlouisfed.org/docs/api/fred/category.html)
 pub struct Category {
-    /// The source ID
+    /// The category ID number
     pub id: usize,
-    /// The source name
+    /// The category name
     pub name: String,
-    /// A link to the source's website
+    /// The parent ID number of the category
     pub parent_id: usize,
     /// Additional information about the category
     pub notes: Option<String>,

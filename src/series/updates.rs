@@ -3,7 +3,7 @@ use serde::Deserialize;
 use crate::series::Series;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/series/search/related_tags endpoint
+/// Response data structure for the fred/series/updates endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html] (https://research.stlouisfed.org/docs/api/fred/series_updates.html)
 pub struct Response {
@@ -49,7 +49,7 @@ impl Builder {
 
     /// Initializes a new series::updates::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::series::updates::Builder;
@@ -77,6 +77,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `start_date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#realtime_start](https://research.stlouisfed.org/docs/api/fred/series_updates.html#realtime_start)
     pub fn realtime_start(&mut self, start_date: &str) -> &mut Builder {
         self.option_string += format!("&realtime_start={}", start_date).as_str();
         self
@@ -97,6 +99,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `num_results` - Maximum number of results to return
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#realtime_end](https://research.stlouisfed.org/docs/api/fred/series_updates.html#realtime_end)
     pub fn limit(&mut self, num_results: usize) -> &mut Builder {
         let num_results = if num_results > 1000 { // max value is 1000
             1000
@@ -109,12 +113,12 @@ impl Builder {
 
     /// Adds an offset argument to the builder
     /// 
-    /// The API docs are rather vague on this argument so feel free to open an issue on GitHub with more information if you have it so I can update the docs.
-    /// 
-    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#offset](https://research.stlouisfed.org/docs/api/fred/series_updates.html#offset)
+    /// Adding an offset shifts the starting result number.  For example, if limit is 5 and offset is 0 then results 1-5 will be returned, but if offset was 5 then results 6-10 would be returned.
     /// 
     /// # Arguments
     /// * `ofs` - the offset amount
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#offset](https://research.stlouisfed.org/docs/api/fred/series_updates.html#offset)
     pub fn offset(&mut self, ofs: usize) -> &mut Builder {
         self.option_string += format!("&offset={}", ofs).as_str();
         self
@@ -124,6 +128,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `value` - value with which to filter results
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#filter_value](https://research.stlouisfed.org/docs/api/fred/series_updates.html#filter_value)
     pub fn filter_value(&mut self, value: FilterValue) -> &mut Builder {
         match value {
             FilterValue::Macro => {
@@ -141,11 +147,13 @@ impl Builder {
     /// 
     /// Both a start and end time must be specified together as per the API docs.
     /// 
-    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#start_time](https://research.stlouisfed.org/docs/api/fred/series_updates.html#start_time)
-    /// 
     /// # Arguments
     /// * `start_time` - Start time to limit results to (YYYYMMDDHhmm format)
     /// * `end_time` - End time to limit results to (YYYYMMDDHhmm format)
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#start_time](https://research.stlouisfed.org/docs/api/fred/series_updates.html#start_time)
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/series_updates.html#end_time](https://research.stlouisfed.org/docs/api/fred/series_updates.html#end_time)
     pub fn time_range(&mut self, start_time: &str, end_time: &str) -> &mut Builder {
         self.option_string += format!(
             "&start_time={}&end_time={}",

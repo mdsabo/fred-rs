@@ -2,7 +2,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 #[derive(Deserialize)]
-/// Response data structure for the fred/release endpoint
+/// Response data structure for the fred/release/tables endpoint
 /// 
 /// [https://research.stlouisfed.org/docs/api/fred/release_tables.html] (https://research.stlouisfed.org/docs/api/fred/release_tables.html)
 pub struct Response {
@@ -50,7 +50,7 @@ impl Builder {
 
     /// Initializes a new release::tables::Builder that can be used to add commands to an API request
     /// 
-    /// The builder does not check for duplicate arguments and instead adds all arguments to the URL string.  The FRED API behavior for duplicates in unknown.
+    /// The builder does not do validity checking of the arguments nor does it check for duplicates.
     /// 
     /// ```
     /// use fred_rs::release::tables::Builder;
@@ -71,7 +71,20 @@ impl Builder {
         self.option_string
     }
 
+    /// Add the element_id argument to the builder
+    /// 
+    /// # Arguments
+    /// * `id` - The release table element id you would like to retrieve
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_tables.html#element_id](https://research.stlouisfed.org/docs/api/fred/release_tables.html#element_id)
+    pub fn element_id(&mut self, id: usize) -> &mut Builder {
+        self.option_string += format!("&element_id={}", id).as_str();
+        self
+    }
+
     /// Use to indicate that observation values should be returned as well for applicable series
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_tables.html#include_observation_values](https://research.stlouisfed.org/docs/api/fred/release_tables.html#include_observation_values)
     pub fn include_observation_values(&mut self) -> &mut Builder {
         self.option_string += "&include_observation_values=true";
         self
@@ -81,6 +94,8 @@ impl Builder {
     /// 
     /// # Arguments
     /// * `date` - date formatted as YYYY-MM-DD
+    /// 
+    /// [https://research.stlouisfed.org/docs/api/fred/release_tables.html#observation_date](https://research.stlouisfed.org/docs/api/fred/release_tables.html#observation_date)
     pub fn observation_date(&mut self, date: &str) -> &mut Builder {
         self.option_string += format!("&observation_date={}", date).as_str();
         self

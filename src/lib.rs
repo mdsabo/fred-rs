@@ -35,7 +35,9 @@
 /// ```
 pub mod client;
 
-/// fred/category endpoint
+/// Get a category
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/category.html](https://research.stlouisfed.org/docs/api/fred/category.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -65,7 +67,9 @@ pub mod client;
 /// ```
 pub mod category;
 
-/// fred/releases endpoints
+/// Get all releases of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/releases.html](https://research.stlouisfed.org/docs/api/fred/releases.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -102,7 +106,9 @@ pub mod category;
 /// ```
 pub mod releases;
 
-/// fred/release endpoints
+/// Get a release of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/release.html](https://research.stlouisfed.org/docs/api/fred/release.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -136,7 +142,9 @@ pub mod releases;
 /// ```
 pub mod release;
 
-/// fred/series endpoints
+/// Get an economic data series
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/series.html](https://research.stlouisfed.org/docs/api/fred/series.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -175,7 +183,9 @@ pub mod release;
 /// ```
 pub mod series;
 
-/// fred/tags endpoints
+/// Get all tags, search for tags, or get tags by name
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/tags.html](https://research.stlouisfed.org/docs/api/fred/tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -213,7 +223,9 @@ pub mod series;
 pub mod tags;
 
 
-/// fred/related_tags endpoint
+/// Get the related tags for one or more tags
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/related_tags.html](https://research.stlouisfed.org/docs/api/fred/related_tags.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -255,7 +267,9 @@ pub mod tags;
 /// ```
 pub mod related_tags;
 
-/// fred/sources endpoint
+/// Get all sources of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/sources.html](https://research.stlouisfed.org/docs/api/fred/sources.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
@@ -294,7 +308,9 @@ pub mod related_tags;
 /// ```
 pub mod sources;
 
-/// fred/source endpoint
+/// Get a source of economic data
+/// 
+/// [https://research.stlouisfed.org/docs/api/fred/source.html](https://research.stlouisfed.org/docs/api/fred/source.html)
 /// 
 /// ```
 /// use fred_rs::client::FredClient;
