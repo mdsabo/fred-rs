@@ -26,7 +26,10 @@ creates and manages a `FredClient`, which manages the HTTPS client and parses in
 Currently the client uses the reqwest::blocking::client, but if there exists a need for an
 async version then that can be explored.  The diagram below shows the general architecture 
 from an application standpoint.
-![architecture](README/architecture.png)
+
+<p align="center"> 
+<img src="README/architecture.png" alt_text="architecture">
+</p>
 
 ## Usage
 Below is an example of the general usage for accessing an observation or data series.
