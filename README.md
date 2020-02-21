@@ -116,5 +116,5 @@ to open a GitHub issue or email me directly at matthewdsabo@gmail.com.
 #### License
 
 <sup>
-Licensed under <a href="README/LICENSE">MIT license</a>.
+Licensed under <a href="LICENSE">MIT license</a>.
 </sup>
