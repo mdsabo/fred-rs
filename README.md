@@ -87,9 +87,11 @@ directly to the client function as `"GNPCA"`.  The `tag_names` parameter availab
 accepts a list of arguments, so it is easier to pass this argument to the builder.
 
 ## API Key
-Developers need to request an API Key in order to access FRED.  This can be done at [https://research.stlouisfed.org/docs/api/api_key.html](https://research.stlouisfed.org/docs/api/api_key.html).
+Developers need to request an API Key in order to access FRED.  This can be done 
+at [https://research.stlouisfed.org/docs/api/api_key.html](https://research.stlouisfed.org/docs/api/api_key.html).
 
-<b>fred-rs</b> looks for the `FRED_API_KEY` environment variable by default.  This can be set with the following line in BASH.
+<b>fred-rs</b> looks for the `FRED_API_KEY` environment variable by default.  The 
+variable can be set with the following line in Bash.
 ```bash
 export FRED_API_KEY=abcdefghijklmnopqrstuvwxyz123456
 ```
@@ -109,12 +111,22 @@ let mut client = match FredClient::new() {
 client.with_key("abcdefghijklmnopqrstuvwxyz123456");
 ```
 
-## Issues/Bugs/Improvments
-If you discover any issues or bugs or want to suggest any improvements, feel free 
-to open a GitHub issue or email me directly at matthewdsabo@gmail.com.
+## Issues/Bugs/Improvments/Help/Questions
+If you discover any issues or bugs, want to suggest any improvements, or have 
+questions about the crate, feel free to open a GitHub issue or email me directly 
+at matthewdsabo@gmail.com with <b>fred-rs</b> in the subject line.
 
 #### License
 
 <sup>
-Licensed under <a href="LICENSE">MIT license</a>.
+Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
+2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
 </sup>
+
+<br>
+
+<sub>
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in this crate by you, as defined in the Apache-2.0 license, shall
+be dual licensed as above, without any additional terms or conditions.
+</sub>
