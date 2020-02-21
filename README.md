@@ -8,6 +8,13 @@
  fred_rs = "0.1.0"
  ```
 
+ ## Useful Links
+fred-rs Docs <br>
+[FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) <br>
+[FRED API Key Information](https://research.stlouisfed.org/docs/api/api_key.html)
+
+<hr>
+
  FRED (Federal Reserve Economic Data) is a large online database of economic data hosted by the Federal Reserve Bank of St. Louis.  The website currently hosts approximately "672,000 US and international time series from 89 sources" including the the graph of unemployment rate shown below.
 
 <p align="center"> 
@@ -19,12 +26,6 @@ U.S. Bureau of Labor Statistics, Unemployment Rate [UNRATE], retrieved from FRED
 </p>
 
 Access to the raw data is available through the FRED API.  fred-rs is an intermediate layer between the HTTPS client and the user application.  Requests to the FRED API are made through structured calls to the fred_rs FredClient and data is returned as usable data objects (structs).
-
-## Useful Links
-fred-rs Docs <br>
-[FRED API Documentaion](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) <br>
-[FRED API Key Information](https://research.stlouisfed.org/docs/api/api_key.html)
-
 
 ## Overview
 fred-rs acts as a middleman to facilitate requests to the FRED API.  The user application
