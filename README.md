@@ -77,7 +77,7 @@ let resp: Response = match c.series_observation("GNPCA", Some(builder)) {
 
 #### Request Parameters
 All endpoints use the builder approach to construct the API URL.  Each builder 
-method corresponds to a paramter that can be added to the API request. 
+method corresponds to a parameter that can be added to the API request. 
 
 In the example above, three parameters are added to the request, observation_start, units and frequency.
 The [FRED API Documentation](https://research.stlouisfed.org/docs/api/fred/#General_Documentation) 
