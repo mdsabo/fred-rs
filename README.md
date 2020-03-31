@@ -1,6 +1,8 @@
 # fred-rs
 
  **fred-rs is a simple interface for accessing the Federal Reserve Bank of St. Louis's FRED API.**
+ 
+ ![Rust](https://github.com/mdsabo/fred-rs/workflows/Rust/badge.svg)
 
  ---
  ```toml
