@@ -5,7 +5,7 @@
  ---
  ```toml
  [dependencies]
- fred_rs = "0.1.1"
+ fred-rs = "0.1.1"
  ```
 
  ## Useful Links
